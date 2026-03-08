@@ -34,11 +34,11 @@ export default function Home() {
 
 				{/* Nav */}
 				<header className="group relative z-50 transition-colors duration-300 hover:bg-secondary">
-					<nav className="relative mx-auto flex h-16 max-w-360 items-center justify-between px-5 md:h-20 md:px-10">
+					<nav className="relative mx-auto flex h-20 max-w-360 items-center justify-between px-5 md:h-20 md:px-10">
 						{/* Mobile: logo left */}
 						<Link
 							href="/"
-							className="text-2xl font-medium tracking-tight text-white transition-colors duration-300 group-hover:text-foreground md:absolute md:left-1/2 md:-translate-x-1/2 md:text-4xl"
+							className="text-3xl font-medium tracking-tight text-white transition-colors duration-300 group-hover:text-foreground md:absolute md:left-1/2 md:-translate-x-1/2 md:text-4xl"
 						>
 							GlowSafe
 						</Link>
@@ -60,41 +60,41 @@ export default function Home() {
 							</div>
 						</div>
 
-						{/* Mobile: icon buttons right */}
-						<div className="flex items-center gap-5 md:hidden">
-							<button className="text-white/80 transition-colors hover:text-white">
-								<Search className="size-5" />
+						{/* Mobile: icon buttons right — larger touch targets */}
+						<div className="flex items-center gap-2 md:hidden">
+							<button className="flex min-h-12 min-w-12 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white active:bg-white/15">
+								<Search className="size-7" />
 							</button>
-							<button className="text-white/80 transition-colors hover:text-white">
-								<MapPin className="size-5" />
+							<button className="flex min-h-12 min-w-12 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white active:bg-white/15">
+								<MapPin className="size-7" />
 							</button>
-							<button className="text-white/80 transition-colors hover:text-white">
-								<Menu className="size-6" />
+							<button className="flex min-h-12 min-w-12 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white active:bg-white/15">
+								<Menu className="size-8" />
 							</button>
 						</div>
 					</nav>
 				</header>
 
 				{/* Hero */}
-				<section className="relative z-10 flex min-h-[calc(100vh-4rem)] flex-col justify-end px-5 pb-16 md:min-h-[calc(100vh-5rem)] md:items-center md:justify-center md:px-6 md:pb-0">
+				<section className="relative z-10 flex min-h-[calc(100vh-5rem)] flex-col justify-end px-5 pb-16 md:min-h-[calc(100vh-5rem)] md:items-center md:justify-center md:px-6 md:pb-0">
 					<div className="w-full max-w-5xl text-left md:text-center">
-						<p className="text-[10px] font-medium tracking-[0.2em] text-white/70 sm:text-xs">
+						<p className="text-xs font-medium tracking-[0.2em] text-white/70 sm:text-xs">
 							Sun smart that fits the way you live
 						</p>
-						<h1 className="mt-4 text-xl font-normal leading-tight tracking-tight text-white sm:text-4xl md:mt-5 md:text-6xl">
+						<h1 className="mt-4 text-3xl font-normal leading-tight tracking-tight text-white sm:text-4xl md:mt-5 md:text-6xl">
 							Glow smart.{" "}
 							<span className="text-yellow-400">Stay safe.</span>
 						</h1>
-						<p className="mt-4 text-sm leading-relaxed text-white/85 sm:text-base md:mx-auto md:mt-5 md:text-lg">
+						<p className="mt-4 text-base leading-relaxed text-white/85 sm:text-base md:mx-auto md:mt-5 md:text-lg">
 							Real-time UV for your area, tips for your skin type,
 							zero lectures. Just what you need to enjoy the sun.
 						</p>
 						<Link
 							href="#early-access"
-							className="group mt-7 flex w-full items-center justify-center gap-3 border border-white/60 py-3.5 text-sm tracking-wide text-white transition-all duration-300 hover:border-secondary hover:bg-secondary hover:text-foreground sm:mt-9 md:mx-auto md:inline-flex md:w-auto md:px-20"
+							className="group mt-7 flex w-full min-h-14 items-center justify-center gap-3 border border-white/60 py-4 text-base tracking-wide text-white transition-all duration-300 hover:border-secondary hover:bg-secondary hover:text-foreground sm:mt-9 md:mx-auto md:inline-flex md:min-h-0 md:w-auto md:py-3.5 md:px-20 md:text-sm"
 						>
 							Check today&apos;s UV
-							<ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+							<ArrowRight className="size-5 transition-transform group-hover:translate-x-1 md:size-4" />
 						</Link>
 					</div>
 				</section>
