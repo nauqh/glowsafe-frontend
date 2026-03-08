@@ -13,7 +13,7 @@ function NavLink({
 	return (
 		<Link
 			href={href}
-			className="text-sm font-medium text-white decoration-white/30 underline-offset-4 transition-colors duration-300 hover:text-white hover:decoration-white/70 group-hover:text-foreground/70 group-hover:decoration-transparent group-hover:hover:text-foreground"
+			className="text-sm font-semibold text-white decoration-white/30 underline-offset-4 transition-colors duration-300 hover:text-white hover:decoration-white/70 group-hover:text-foreground/70 group-hover:decoration-transparent group-hover:hover:text-foreground"
 		>
 			{children}
 		</Link>
@@ -33,7 +33,7 @@ export default function Home() {
 				<div className="absolute inset-0 bg-linear-to-b from-black/30 via-black/10 to-black/50" />
 
 				{/* Nav */}
-				<header className="group relative z-50 transition-colors duration-300 hover:bg-background">
+				<header className="group relative z-50 transition-colors duration-300 hover:bg-secondary">
 					<nav className="relative mx-auto flex h-16 max-w-360 items-center justify-between px-5 md:h-20 md:px-10">
 						{/* Mobile: logo left */}
 						<Link
@@ -91,7 +91,7 @@ export default function Home() {
 						</p>
 						<Link
 							href="#early-access"
-							className="group mt-7 flex w-full items-center justify-center gap-3 border border-white/60 py-3.5 text-sm tracking-wide text-white transition-all duration-300 hover:border-background hover:bg-background hover:text-foreground sm:mt-9 md:mx-auto md:inline-flex md:w-auto md:px-20"
+							className="group mt-7 flex w-full items-center justify-center gap-3 border border-white/60 py-3.5 text-sm tracking-wide text-white transition-all duration-300 hover:border-secondary hover:bg-secondary hover:text-foreground sm:mt-9 md:mx-auto md:inline-flex md:w-auto md:px-20"
 						>
 							Check today&apos;s UV
 							<ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
