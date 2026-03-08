@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Nunito } from "next/font/google";
 import "./globals.css";
 
-const poppins = Poppins({
-	variable: "--font-poppins",
+const nunito = Nunito({
+	variable: "--font-nunito",
 	subsets: ["latin"],
-	weight: ["300", "400", "500", "600", "700"],
+	weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 	description:
 		"Personalised UV guidance based on your skin type, location, and plans. Real-time BOM data, no lectures — just clear advice for sun-smart confidence.",
 	icons: {
-		icon: "https://upload.wikimedia.org/wikipedia/commons/b/b0/Claude_AI_symbol.svg",
+		icon: "https://nec24.com/wp-content/uploads/2021/07/sunshine.png",
 	},
 };
 
@@ -24,7 +24,9 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={`${poppins.variable} antialiased`}>
+			<body
+				className={`${nunito.variable} ${nunito.className} antialiased`}
+			>
 				{children}
 			</body>
 		</html>

@@ -3,21 +3,21 @@ import { cn } from "@/lib/utils";
 const steps = [
 	{
 		number: "01",
-		title: "Build your profile",
+		title: "Quick quiz, done",
 		description:
-			"A 2-minute quiz that personalises everything — your skin type, location, and typical outdoor activities.",
+			"Two minutes to tell us your skin type, where you hang out, and what you get up to outdoors. That's it.",
 	},
 	{
 		number: "02",
-		title: "Get your daily brief",
+		title: "Your daily UV rundown",
 		description:
-			"Real-time UV data for your suburb, colour-coded and broken into time blocks so your day is scannable at a glance.",
+			"Real-time UV for your suburb, colour-coded by time of day so you can plan your arvo in about three seconds.",
 	},
 	{
 		number: "03",
-		title: "Stay protected",
+		title: "Sun smart, not sun scared",
 		description:
-			"Clear, practical guidance that fits your lifestyle — look good and stay safe without the lecture.",
+			"Practical tips that actually fit your life — no guilt trips, no 50-page pamphlets. Just the good stuff.",
 	},
 ];
 
@@ -30,7 +30,7 @@ export function HowItWorks() {
 					className={cn(
 						"border-b border-border pb-10 pt-8 md:border-b-0 md:pb-0",
 						i < steps.length - 1 && "md:border-r md:pr-10",
-						i > 0 && "md:pl-10"
+						i > 0 && "md:pl-10",
 					)}
 				>
 					<span className="font-mono text-xs text-muted-foreground">

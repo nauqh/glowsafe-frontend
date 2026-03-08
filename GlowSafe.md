@@ -54,24 +54,27 @@ A simple content section with 5–6 myth cards drawn directly from the empathy m
 
 | Role | Name | Hex | Use |
 | --- | --- | --- | --- |
-| **Primary** | Sunny Orange | #FF8C42 | Buttons, logo, key highlights |
-| **Background** | Clean White | #FFFFFF | App background |
-| **Surface** | Soft Yellow | #FFF3CD | Cards and content areas |
+| **Primary** | Near Black | #1C1917 | Primary buttons, links, main UI emphasis |
+| **Accent** | Terracotta | #C15F3C | Hero highlight (“Stay safe”), stat values, key highlights |
+| **Background** | Warm Cream | #FAF7F2 | App background |
+| **Surface** | Clean White | #FFFFFF | Cards, popovers, content areas |
+| **Secondary** | Soft Beige | #F0EAE0 | Secondary surfaces, subtle backgrounds |
 | **Safe** | Bright Green | #06D6A0 | Low UV, positive states |
 | **Warning** | Amber | #FFB703 | Moderate UV, reminders |
 | **Alert** | Coral Red | #EF476F | High UV, overcast alerts |
-| **Text** | Near Black | #212121 | All body text |
+| **Text** | Near Black | #1C1917 | Body text, headings |
+| **Muted** | Warm Grey | #9C958C | Secondary text, captions |
+| **Warm** | Sunny Orange | #E8813A | Supporting brand accent (optional) |
 
 ---
 
 **The logic is simple:**
 
-- White keeps everything clean and uncluttered
-- Sunny Orange owns the brand
+- Warm Cream background keeps the app soft and approachable
+- Sunny Orange (accent) owns key moments — hero line, stat numbers — warm and on-brand
+- Near Black primary keeps buttons and text clear and accessible
 - Green / Amber / Coral handle the UV traffic light system — immediately readable without explanation
-- Soft Yellow adds just enough warmth to the cards so the app never feels cold
-
-Seven colours. Nothing unnecessary. Want me to apply this to a home screen mockup?
+- White cards and Soft Beige secondary surfaces add structure without clutter
 
 References:
 
