@@ -83,7 +83,7 @@ export default function Home() {
 						</p>
 						<h1 className="mt-4 text-3xl font-normal leading-tight tracking-tight text-white sm:text-4xl md:mt-5 md:text-6xl">
 							Glow smart.{" "}
-							<span className="text-yellow-400">Stay safe.</span>
+							<span className="text-yellow">Stay safe.</span>
 						</h1>
 						<p className="mt-4 text-base leading-relaxed text-white/85 sm:text-base md:mx-auto md:mt-5 md:text-lg">
 							Real-time UV for your area, tips for your skin type,
