@@ -79,7 +79,7 @@ export default function Home() {
 				<section className="relative z-10 flex min-h-[calc(100vh-4rem)] flex-col justify-end px-5 pb-16 md:min-h-[calc(100vh-5rem)] md:items-center md:justify-center md:px-6 md:pb-0">
 					<div className="w-full max-w-5xl text-left md:text-center">
 						<p className="text-[10px] font-medium tracking-[0.2em] text-white/70 sm:text-xs">
-							Sun smart for the way you actually live
+							Sun smart that fits the way you live
 						</p>
 						<h1 className="mt-4 text-xl font-normal leading-tight tracking-tight text-white sm:text-4xl md:mt-5 md:text-6xl">
 							Glow smart.{" "}
