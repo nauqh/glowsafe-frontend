@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Nunito } from "next/font/google";
+import { Inconsolata } from "next/font/google";
 import "./globals.css";
 
-const nunito = Nunito({
-	variable: "--font-nunito",
+const inconsolata = Inconsolata({
+	variable: "--font-inconsolata",
 	subsets: ["latin"],
-	weight: ["300", "400", "500", "600", "700", "800"],
+	weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body
-				className={`${nunito.variable} ${nunito.className} antialiased`}
+				className={`${inconsolata.variable} ${inconsolata.className} antialiased`}
 			>
 				{children}
 			</body>
