@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { ArrowRight, Search, Menu, MapPin } from "lucide-react";
+import { ArrowRight, Search, Menu } from "lucide-react";
 import { SiInstagram, SiTiktok } from "react-icons/si";
 import { HowItWorks } from "@/components/landing/how-it-works";
+import Image from "next/image";
 
 function NavLink({
 	href,
@@ -13,7 +14,7 @@ function NavLink({
 	return (
 		<Link
 			href={href}
-			className="text-sm font-semibold text-white decoration-white/30 underline-offset-4 transition-colors duration-300 hover:text-white hover:decoration-white/70 group-hover:text-foreground/70 group-hover:decoration-transparent group-hover:hover:text-foreground"
+			className="text-sm text-white underline-offset-4 transition-all duration-200 hover:underline hover:decoration-white hover:text-white hover:[text-shadow:0_0_0.5px_currentColor] group-hover:text-foreground/70 group-hover:hover:text-foreground group-hover:hover:underline group-hover:hover:decoration-foreground group-hover:hover:[text-shadow:0_0_0.5px_currentColor]"
 		>
 			{children}
 		</Link>
@@ -32,51 +33,79 @@ export default function Home() {
 			>
 				<div className="absolute inset-0 bg-linear-to-b from-black/30 via-black/10 to-black/50" />
 
-				{/* Nav */}
-				<header className="group relative z-50 transition-colors duration-300 hover:bg-secondary">
-					<nav className="relative mx-auto flex h-20 max-w-360 items-center justify-between px-5 md:h-20 md:px-10">
-						{/* Mobile: logo left */}
+				{/* Nav — two-tier like Aesop */}
+				<header className="group relative z-50 pt-2 transition-colors duration-300 hover:bg-secondary md:pt-3">
+					{/* Top row: utility left, logo centre, account right */}
+					<div className="hidden h-14 grid-cols-[1fr_auto_1fr] items-center px-8 md:grid lg:px-12">
+						<div className="flex items-center gap-6">
+							<Image
+								src="/logo.png"
+								alt="GlowSafe"
+								width={40}
+								height={40}
+							/>
+						</div>
 						<Link
 							href="/"
-							className="text-3xl font-medium tracking-tight text-white transition-colors duration-300 group-hover:text-foreground md:absolute md:left-1/2 md:-translate-x-1/2 md:text-4xl"
+							className="text-3xl font-medium tracking-tight text-white transition-colors duration-300 group-hover:text-foreground"
 						>
 							GlowSafe
 						</Link>
+						<div className="flex items-center justify-end gap-6">
+							<NavLink href="/signup">Email sign up</NavLink>
+							<NavLink href="/login">My Account</NavLink>
+						</div>
+					</div>
 
-						{/* Desktop: left links */}
-						<div className="hidden items-center gap-8 md:flex">
+					{/* Bottom row: nav links centred, search pinned right */}
+					<div className="hidden items-center justify-between px-12 md:flex">
+						<nav className="flex items-center gap-10">
+							<NavLink href="/skin-builder">Skin Builder</NavLink>
 							<NavLink href="#how-it-works">About us</NavLink>
-							<NavLink href="#why">Services</NavLink>
-							<NavLink href="#early-access">Contact</NavLink>
-						</div>
+							<NavLink href="#why">Why GlowSafe</NavLink>
+							<NavLink href="#early-access">
+								What&apos;s new
+							</NavLink>
+							<NavLink href="#contact-us">Contact us</NavLink>
+						</nav>
+						<button
+							type="button"
+							className="flex w-50 items-center gap-2.5 border border-white px-6 py-2.5 text-sm text-white transition-colors duration-300 group-hover:border-0 group-hover:border-l group-hover:border-foreground/20 group-hover:text-foreground"
+						>
+							<Search className="size-4 shrink-0" />
+							<span>Search...</span>
+						</button>
+					</div>
 
-						{/* Desktop: right links + search */}
-						<div className="hidden items-center gap-8 md:flex">
-							<NavLink href="#why">What&apos;s new</NavLink>
-							<NavLink href="#why">Library</NavLink>
-							<div className="flex items-center gap-2 border border-white/40 px-3 py-1.5 text-[13px] text-white transition-colors duration-300 hover:border-white/60 group-hover:border-foreground/30 group-hover:text-foreground group-hover:hover:border-foreground/50">
-								<Search className="size-3.5" />
-								<span>Search...</span>
-							</div>
+					{/* Mobile: single row — logo + icons */}
+					<div className="flex h-14 items-center justify-between px-5 md:hidden">
+						<Link
+							href="/"
+							className="text-xl font-medium tracking-tight text-white transition-colors group-hover:text-foreground"
+						>
+							GlowSafe
+						</Link>
+						<div className="flex items-center gap-1">
+							<button
+								type="button"
+								className="flex size-10 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+								aria-label="Search"
+							>
+								<Search className="size-5" />
+							</button>
+							<button
+								type="button"
+								className="flex size-10 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+								aria-label="Menu"
+							>
+								<Menu className="size-5" />
+							</button>
 						</div>
-
-						{/* Mobile: icon buttons right — larger touch targets */}
-						<div className="flex items-center gap-2 md:hidden">
-							<button className="flex min-h-12 min-w-12 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white active:bg-white/15">
-								<Search className="size-7" />
-							</button>
-							<button className="flex min-h-12 min-w-12 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white active:bg-white/15">
-								<MapPin className="size-7" />
-							</button>
-							<button className="flex min-h-12 min-w-12 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white active:bg-white/15">
-								<Menu className="size-8" />
-							</button>
-						</div>
-					</nav>
+					</div>
 				</header>
 
 				{/* Hero */}
-				<section className="relative z-10 flex min-h-[calc(100vh-5rem)] flex-col justify-end px-5 pb-16 md:min-h-[calc(100vh-5rem)] md:items-center md:justify-center md:px-6 md:pb-0">
+				<section className="relative z-10 flex min-h-[calc(100vh-5.75rem)] flex-col justify-end px-5 pb-16 md:min-h-[calc(100vh-5.75rem)] md:items-center md:justify-center md:px-6 md:pb-0">
 					<div className="w-full max-w-5xl text-left md:text-center">
 						<p className="text-xs font-medium tracking-[0.2em] text-white/70 sm:text-xs">
 							Sun smart that fits the way you live
@@ -89,13 +118,15 @@ export default function Home() {
 							Real-time UV for your area, tips for your skin type,
 							zero lectures. Just what you need to enjoy the sun.
 						</p>
-						<Link
-							href="#early-access"
-							className="group mt-7 flex w-full min-h-14 items-center justify-center gap-3 border border-white/60 py-4 text-base tracking-wide text-white transition-all duration-300 hover:border-secondary hover:bg-secondary hover:text-foreground sm:mt-9 md:mx-auto md:inline-flex md:min-h-0 md:w-auto md:py-3.5 md:px-20 md:text-sm"
-						>
-							Check today&apos;s UV
-							<ArrowRight className="size-5 transition-transform group-hover:translate-x-1 md:size-4" />
-						</Link>
+						<div className="mt-7 flex w-full flex-col gap-3 sm:mt-9 md:flex-row md:justify-center md:gap-4">
+							<Link
+								href="/skin-builder"
+								className="group flex min-h-14 flex-1 items-center justify-center gap-3 border border-white py-4 text-base tracking-wide text-white font-semibold transition-all duration-300 hover:border-secondary hover:bg-secondary hover:text-foreground md:min-h-0 md:w-auto md:flex-initial md:py-3.5 md:px-8 md:text-sm"
+							>
+								Build your profile
+								<ArrowRight className="size-5 transition-transform group-hover:translate-x-1 md:size-4" />
+							</Link>
+						</div>
 					</div>
 				</section>
 			</div>
@@ -194,7 +225,10 @@ export default function Home() {
 			</main>
 
 			{/* Footer */}
-			<footer className="border-t border-border bg-[#F5F3ED]">
+			<footer
+				id="contact-us"
+				className="border-t border-border bg-[#F5F3ED]"
+			>
 				<div className="mx-auto px-5 pb-6 pt-8 md:px-12 md:pt-10">
 					{/* Top: Home + headline */}
 					<div className="pb-6 md:pb-8">
@@ -262,6 +296,18 @@ export default function Home() {
 									GlowSafe
 								</p>
 								<div className="mt-4 flex flex-col gap-2 text-muted-foreground">
+									<Link
+										href="/profile"
+										className="transition-colors hover:text-foreground"
+									>
+										Profile
+									</Link>
+									<Link
+										href="/skin-builder"
+										className="transition-colors hover:text-foreground"
+									>
+										Skin Builder
+									</Link>
 									<Link
 										href="#how-it-works"
 										className="transition-colors hover:text-foreground"
