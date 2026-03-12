@@ -22,15 +22,21 @@ function NavLink({
 }
 
 export default function Home() {
-	const heroBgImage = "https://wallpapercave.com/wp/wp9432592.jpg";
-
 	return (
 		<div className="min-h-screen bg-background text-foreground">
 			{/* Nav + Hero */}
-			<div
-				className="relative min-h-screen bg-cover bg-center bg-no-repeat"
-				style={{ backgroundImage: `url(${heroBgImage})` }}
-			>
+			<div className="relative min-h-screen overflow-hidden">
+				{/* Hero background video */}
+				<video
+					autoPlay
+					muted
+					loop
+					playsInline
+					className="absolute inset-0 h-full w-full object-cover"
+					aria-hidden
+				>
+					<source src="/hero.mp4" type="video/mp4" />
+				</video>
 				<div className="absolute inset-0 bg-linear-to-b from-black/30 via-black/10 to-black/50" />
 
 				{/* Nav — two-tier like Aesop */}
