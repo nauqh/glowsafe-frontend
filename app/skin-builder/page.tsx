@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft, MapPin, Sparkles, Check } from "lucide-react";
@@ -59,11 +59,19 @@ export default function SkinBuilderPage() {
 		[],
 	);
 	const [completed, setCompleted] = useState(false);
+	const [showOptions, setShowOptions] = useState(false);
+
+	// When step changes: show question first, then options after delay
+	useEffect(() => {
+		setShowOptions(false);
+		const t = setTimeout(() => setShowOptions(true), 1000);
+		return () => clearTimeout(t);
+	}, [step]);
 
 	const handleTypewriterComplete = useCallback(() => {
 		if (loadingDoneRef.current) return;
 		loadingDoneRef.current = true;
-		setTimeout(() => setLoading(false), 2000);
+		setTimeout(() => setLoading(false), 1000);
 	}, []);
 
 	const progress = ((step + 1) / TOTAL_STEPS) * 100;
@@ -166,16 +174,6 @@ export default function SkinBuilderPage() {
 
 		return (
 			<div className="flex min-h-screen flex-col overflow-hidden bg-background sm:h-screen">
-				<header className="shrink-0 border-b border-border bg-card">
-					<nav className="mx-auto flex h-14 max-w-4xl items-center justify-between px-4 sm:px-6 md:px-8">
-						<Link
-							href="/"
-							className="text-lg font-medium tracking-tight text-foreground sm:text-xl"
-						>
-							GlowSafe
-						</Link>
-					</nav>
-				</header>
 				<main className="min-h-0 flex-1 overflow-y-auto">
 					<div className="mx-auto max-w-md px-4 py-10 sm:max-w-lg sm:px-6 sm:py-14 md:py-20">
 						<div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -280,30 +278,18 @@ export default function SkinBuilderPage() {
 	// —— Quiz steps ——
 	return (
 		<div className="flex min-h-screen flex-col overflow-hidden bg-background sm:h-screen">
-			<header className="shrink-0 border-b border-border bg-card">
-				<nav className="mx-auto flex h-14 max-w-4xl items-center justify-between px-4 sm:px-6 md:px-8">
-					<Link
-						href="/"
-						className="text-lg font-medium tracking-tight text-foreground"
-					>
-						GlowSafe
-					</Link>
-					<span className="text-xs text-muted-foreground sm:text-sm">
-						Step {step + 1} of {TOTAL_STEPS}
-					</span>
-				</nav>
-				<div className="h-1 w-full bg-muted">
-					<div
-						className="h-full bg-accent transition-all duration-300 ease-out"
-						style={{ width: `${progress}%` }}
-						role="progressbar"
-						aria-valuenow={Math.round(progress)}
-						aria-valuemin={0}
-						aria-valuemax={100}
-						aria-label="Quiz progress"
-					/>
-				</div>
-			</header>
+			{/* Progress bar only */}
+			<div className="h-1 w-full shrink-0 bg-muted">
+				<div
+					className="h-full bg-accent transition-all duration-300 ease-out"
+					style={{ width: `${progress}%` }}
+					role="progressbar"
+					aria-valuenow={Math.round(progress)}
+					aria-valuemin={0}
+					aria-valuemax={100}
+					aria-label="Quiz progress"
+				/>
+			</div>
 
 			<main className="flex min-h-0 flex-1 flex-col overflow-y-auto">
 				<div className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 py-6 sm:px-6 sm:py-8 md:py-10">
@@ -311,292 +297,338 @@ export default function SkinBuilderPage() {
 						{/* Step 0 — Skin type */}
 						{step === 0 && (
 							<>
-								<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
-									How does your skin usually react to sun
-									exposure?
-								</h1>
-								<p className="mt-2 max-w-xl text-sm text-muted-foreground sm:mt-2.5 md:text-base">
-									Pick the option closest to your un-tanned
-									skin (e.g. inside of your arm).{" "}
-									<a
-										href="https://www.cancer.nsw.gov.au/prevention-and-screening/preventing-cancer/preventing-skin-cancer/reduce-your-skin-cancer-risk/identify-your-skin-type"
-										target="_blank"
-										rel="noopener noreferrer"
-										className="text-muted-foreground/80 underline underline-offset-2 hover:text-foreground"
-										aria-label="Learn more about skin types"
-									>
-										Learn more
-									</a>
-								</p>
-								<div className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-3 lg:gap-4">
-									{SKIN_TYPES.map((skin) => (
-										<button
-											key={skin.id}
-											type="button"
-											onClick={() =>
-												setSkinTypeId(skin.id)
-											}
-											className={cn(
-												"flex min-h-[72px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-all sm:min-h-0 sm:py-3",
-												skinTypeId === skin.id
-													? "border-accent bg-accent/10"
-													: "border-border bg-card hover:border-muted-foreground/40",
-											)}
+								<div className="animate-quiz-question">
+									<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
+										How does your skin usually react to sun
+										exposure?
+									</h1>
+									<p className="mt-2 max-w-xl text-sm text-muted-foreground sm:mt-2.5 md:text-base">
+										Pick the option closest to your
+										un-tanned skin (e.g. inside of your
+										arm).{" "}
+										<a
+											href="https://www.cancer.nsw.gov.au/prevention-and-screening/preventing-cancer/preventing-skin-cancer/reduce-your-skin-cancer-risk/identify-your-skin-type"
+											target="_blank"
+											rel="noopener noreferrer"
+											className="text-muted-foreground/80 underline underline-offset-2 hover:text-foreground"
+											aria-label="Learn more about skin types"
 										>
-											<div
-												className="size-10 shrink-0 rounded-full border border-border shadow-inner sm:size-9"
-												style={{
-													backgroundColor: skin.color,
-												}}
-												aria-hidden
-											/>
-											<div className="min-w-0 flex-1">
-												<p className="text-sm font-medium text-foreground">
-													{skin.label}
-												</p>
-												<p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground sm:truncate">
-													{skin.description}
-												</p>
-											</div>
-										</button>
-									))}
+											Learn more
+										</a>
+									</p>
 								</div>
+								{showOptions && (
+									<div className="mt-6 grid animate-quiz-options gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-3 lg:gap-4">
+										{SKIN_TYPES.map((skin) => (
+											<button
+												key={skin.id}
+												type="button"
+												onClick={() =>
+													setSkinTypeId(skin.id)
+												}
+												className={cn(
+													"flex min-h-[72px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-all sm:min-h-0 sm:py-3",
+													skinTypeId === skin.id
+														? "border-accent bg-accent/10"
+														: "border-border bg-card hover:border-muted-foreground/40",
+												)}
+											>
+												<div
+													className="size-10 shrink-0 rounded-full border border-border shadow-inner sm:size-9"
+													style={{
+														backgroundColor:
+															skin.color,
+													}}
+													aria-hidden
+												/>
+												<div className="min-w-0 flex-1">
+													<p className="text-sm font-medium text-foreground">
+														{skin.label}
+													</p>
+													<p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground sm:truncate">
+														{skin.description}
+													</p>
+												</div>
+											</button>
+										))}
+									</div>
+								)}
 							</>
 						)}
 
 						{/* Step 1 — Location */}
 						{step === 1 && (
 							<>
-								<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
-									Which area of Victoria do you spend most
-									time in?
-								</h1>
-								<p className="mt-2 text-sm text-muted-foreground sm:mt-2.5 md:text-base">
-									We&apos;ll use this to show UV for your
-									area.
-								</p>
-								<div className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-3 lg:gap-4">
-									{AUSTRALIAN_LOCATIONS.map((loc) => (
-										<button
-											key={loc.id}
-											type="button"
-											onClick={() =>
-												setLocationId(loc.id)
-											}
-											className={cn(
-												"flex min-h-[56px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-all sm:min-h-0",
-												locationId === loc.id
-													? "border-accent bg-accent/10"
-													: "border-border bg-card hover:border-muted-foreground/40",
-											)}
-										>
-											<MapPin className="size-5 shrink-0 text-muted-foreground sm:size-4" />
-											<div className="min-w-0">
-												<span className="block text-sm font-medium text-foreground">
-													{loc.label}
-												</span>
-												<span className="text-xs text-muted-foreground">
-													{loc.region}
-												</span>
-											</div>
-										</button>
-									))}
+								<div className="animate-quiz-question">
+									<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
+										Which area of Victoria do you spend most
+										time in?
+									</h1>
+									<p className="mt-2 text-sm text-muted-foreground sm:mt-2.5 md:text-base">
+										We&apos;ll use this to show UV for your
+										area.
+									</p>
 								</div>
+								{showOptions && (
+									<div className="mt-6 grid animate-quiz-options gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-3 lg:gap-4">
+										{AUSTRALIAN_LOCATIONS.map((loc) => (
+											<button
+												key={loc.id}
+												type="button"
+												onClick={() =>
+													setLocationId(loc.id)
+												}
+												className={cn(
+													"flex min-h-[56px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-all sm:min-h-0",
+													locationId === loc.id
+														? "border-accent bg-accent/10"
+														: "border-border bg-card hover:border-muted-foreground/40",
+												)}
+											>
+												<MapPin className="size-5 shrink-0 text-muted-foreground sm:size-4" />
+												<div className="min-w-0">
+													<span className="block text-sm font-medium text-foreground">
+														{loc.label}
+													</span>
+													<span className="text-xs text-muted-foreground">
+														{loc.region}
+													</span>
+												</div>
+											</button>
+										))}
+									</div>
+								)}
 							</>
 						)}
 
 						{/* Step 2 — Activities */}
 						{step === 2 && (
 							<>
-								<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
-									What brings you outside most often?
-								</h1>
-								<p className="mt-2 text-sm text-muted-foreground sm:mt-2.5 md:text-base">
-									Pick all that apply.
-								</p>
-								<div className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-3 lg:gap-4">
-									{OUTDOOR_ACTIVITIES.map((act) => (
-										<button
-											key={act.id}
-											type="button"
-											onClick={() =>
-												toggleActivity(act.id)
-											}
-											className={cn(
-												"flex min-h-[56px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-all sm:min-h-0",
-												activityIds.includes(act.id)
-													? "border-accent bg-accent/10"
-													: "border-border bg-card hover:border-muted-foreground/40",
-											)}
-											aria-pressed={activityIds.includes(
-												act.id,
-											)}
-										>
-											<span
-												className="text-xl sm:text-lg"
-												aria-hidden
-											>
-												{act.icon}
-											</span>
-											<span className="text-sm font-medium text-foreground">
-												{act.label}
-											</span>
-										</button>
-									))}
+								<div className="animate-quiz-question">
+									<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
+										What brings you outside most often?
+									</h1>
+									<p className="mt-2 text-sm text-muted-foreground sm:mt-2.5 md:text-base">
+										Pick all that apply.
+									</p>
 								</div>
+								{showOptions && (
+									<div className="mt-6 grid animate-quiz-options gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-3 lg:gap-4">
+										{OUTDOOR_ACTIVITIES.map((act) => (
+											<button
+												key={act.id}
+												type="button"
+												onClick={() =>
+													toggleActivity(act.id)
+												}
+												className={cn(
+													"flex min-h-[56px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-all sm:min-h-0",
+													activityIds.includes(act.id)
+														? "border-accent bg-accent/10"
+														: "border-border bg-card hover:border-muted-foreground/40",
+												)}
+												aria-pressed={activityIds.includes(
+													act.id,
+												)}
+											>
+												<span
+													className="text-xl sm:text-lg"
+													aria-hidden
+												>
+													{act.icon}
+												</span>
+												<span className="text-sm font-medium text-foreground">
+													{act.label}
+												</span>
+											</button>
+										))}
+									</div>
+								)}
 							</>
 						)}
 
 						{/* Step 3 — Burn history */}
 						{step === 3 && (
 							<>
-								<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
-									Have you ever had a bad sunburn — red,
-									peeling, or blistered?
-								</h1>
-								<div className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-4 lg:gap-4">
-									{BURN_HISTORY_OPTIONS.map((opt) => (
-										<OptionBtn
-											key={opt.id}
-											selected={burnHistory === opt.id}
-											onClick={() =>
-												setBurnHistory(opt.id)
-											}
-										>
-											<span
-												className="text-xl sm:text-lg"
-												aria-hidden
-											>
-												{opt.icon}
-											</span>
-											<span className="text-sm font-medium">
-												{opt.label}
-											</span>
-										</OptionBtn>
-									))}
+								<div className="animate-quiz-question">
+									<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
+										Have you ever had a bad sunburn — red,
+										peeling, or blistered?
+									</h1>
 								</div>
+								{showOptions && (
+									<div className="mt-6 grid animate-quiz-options gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-4 lg:gap-4">
+										{BURN_HISTORY_OPTIONS.map((opt) => (
+											<OptionBtn
+												key={opt.id}
+												selected={
+													burnHistory === opt.id
+												}
+												onClick={() =>
+													setBurnHistory(opt.id)
+												}
+											>
+												<span
+													className="text-xl sm:text-lg"
+													aria-hidden
+												>
+													{opt.icon}
+												</span>
+												<span className="text-sm font-medium">
+													{opt.label}
+												</span>
+											</OptionBtn>
+										))}
+									</div>
+								)}
 							</>
 						)}
 
 						{/* Step 4 — Work pattern */}
 						{step === 4 && (
 							<>
-								<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
-									How much of your typical weekday is spent
-									outdoors?
-								</h1>
-								<div className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-4 lg:gap-4">
-									{WORK_PATTERN_OPTIONS.map((opt) => (
-										<OptionBtn
-											key={opt.id}
-											selected={workPattern === opt.id}
-											onClick={() =>
-												setWorkPattern(opt.id)
-											}
-										>
-											<span
-												className="text-xl sm:text-lg"
-												aria-hidden
-											>
-												{opt.icon}
-											</span>
-											<span className="text-sm font-medium">
-												{opt.label}
-											</span>
-										</OptionBtn>
-									))}
+								<div className="animate-quiz-question">
+									<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
+										How much of your typical weekday is
+										spent outdoors?
+									</h1>
 								</div>
+								{showOptions && (
+									<div className="mt-6 grid animate-quiz-options gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-4 lg:gap-4">
+										{WORK_PATTERN_OPTIONS.map((opt) => (
+											<OptionBtn
+												key={opt.id}
+												selected={
+													workPattern === opt.id
+												}
+												onClick={() =>
+													setWorkPattern(opt.id)
+												}
+											>
+												<span
+													className="text-xl sm:text-lg"
+													aria-hidden
+												>
+													{opt.icon}
+												</span>
+												<span className="text-sm font-medium">
+													{opt.label}
+												</span>
+											</OptionBtn>
+										))}
+									</div>
+								)}
 							</>
 						)}
 
 						{/* Step 5 — Peak sun */}
 						{step === 5 && (
 							<>
-								<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
-									When are you usually outside during the day?
-								</h1>
-								<p className="mt-2 text-sm text-muted-foreground">
-									Midday (10am–2pm) is the high-risk window —
-									we&apos;ll flag it in your report.
-								</p>
-								<div className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-3 lg:gap-4">
-									{PEAK_SUN_OPTIONS.map((opt) => (
-										<OptionBtn
-											key={opt.id}
-											selected={peakSun === opt.id}
-											onClick={() => setPeakSun(opt.id)}
-										>
-											<span
-												className="text-xl sm:text-lg"
-												aria-hidden
-											>
-												{opt.icon}
-											</span>
-											<span className="text-sm font-medium">
-												{opt.label}
-											</span>
-										</OptionBtn>
-									))}
+								<div className="animate-quiz-question">
+									<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
+										When are you usually outside during the
+										day?
+									</h1>
+									<p className="mt-2 text-sm text-muted-foreground">
+										Midday (10am–2pm) is the high-risk
+										window — we&apos;ll flag it in your
+										report.
+									</p>
 								</div>
+								{showOptions && (
+									<div className="mt-6 grid animate-quiz-options gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-3 lg:gap-4">
+										{PEAK_SUN_OPTIONS.map((opt) => (
+											<OptionBtn
+												key={opt.id}
+												selected={peakSun === opt.id}
+												onClick={() =>
+													setPeakSun(opt.id)
+												}
+											>
+												<span
+													className="text-xl sm:text-lg"
+													aria-hidden
+												>
+													{opt.icon}
+												</span>
+												<span className="text-sm font-medium">
+													{opt.label}
+												</span>
+											</OptionBtn>
+										))}
+									</div>
+								)}
 							</>
 						)}
 
 						{/* Step 6 — Sunscreen frequency */}
 						{step === 6 && (
 							<>
-								<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
-									How often do you apply sunscreen before
-									going outside?
-								</h1>
-								<div className="mt-6 grid gap-3 sm:grid-cols-1 sm:gap-3 md:grid-cols-2 md:mt-8 md:gap-4">
-									{SUNSCREEN_FREQ_OPTIONS.map((opt) => (
-										<OptionBtn
-											key={opt.id}
-											selected={sunscreenFreq === opt.id}
-											onClick={() =>
-												setSunscreenFreq(opt.id)
-											}
-										>
-											<span className="text-sm font-medium">
-												{opt.label}
-											</span>
-										</OptionBtn>
-									))}
+								<div className="animate-quiz-question">
+									<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
+										How often do you apply sunscreen before
+										going outside?
+									</h1>
 								</div>
+								{showOptions && (
+									<div className="mt-6 grid animate-quiz-options gap-3 sm:grid-cols-1 sm:gap-3 md:grid-cols-2 md:mt-8 md:gap-4">
+										{SUNSCREEN_FREQ_OPTIONS.map((opt) => (
+											<OptionBtn
+												key={opt.id}
+												selected={
+													sunscreenFreq === opt.id
+												}
+												onClick={() =>
+													setSunscreenFreq(opt.id)
+												}
+											>
+												<span className="text-sm font-medium">
+													{opt.label}
+												</span>
+											</OptionBtn>
+										))}
+									</div>
+								)}
 							</>
 						)}
 
 						{/* Step 7 — Protection habits */}
 						{step === 7 && (
 							<>
-								<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
-									What do you usually do when you&apos;re out
-									in the sun?
-								</h1>
-								<p className="mt-2 text-sm text-muted-foreground">
-									Pick all that apply.
-								</p>
-								<div className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-3 lg:gap-4">
-									{PROTECTION_HABIT_OPTIONS.map((opt) => (
-										<OptionBtn
-											key={opt.id}
-											selected={protectionHabits.includes(
-												opt.id,
-											)}
-											onClick={() => toggleHabit(opt.id)}
-										>
-											<span
-												className="text-xl sm:text-lg"
-												aria-hidden
-											>
-												{opt.icon}
-											</span>
-											<span className="text-sm font-medium">
-												{opt.label}
-											</span>
-										</OptionBtn>
-									))}
+								<div className="animate-quiz-question">
+									<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
+										What do you usually do when you&apos;re
+										out in the sun?
+									</h1>
+									<p className="mt-2 text-sm text-muted-foreground">
+										Pick all that apply.
+									</p>
 								</div>
+								{showOptions && (
+									<div className="mt-6 grid animate-quiz-options gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-3 lg:gap-4">
+										{PROTECTION_HABIT_OPTIONS.map((opt) => (
+											<OptionBtn
+												key={opt.id}
+												selected={protectionHabits.includes(
+													opt.id,
+												)}
+												onClick={() =>
+													toggleHabit(opt.id)
+												}
+											>
+												<span
+													className="text-xl sm:text-lg"
+													aria-hidden
+												>
+													{opt.icon}
+												</span>
+												<span className="text-sm font-medium">
+													{opt.label}
+												</span>
+											</OptionBtn>
+										))}
+									</div>
+								)}
 							</>
 						)}
 					</div>

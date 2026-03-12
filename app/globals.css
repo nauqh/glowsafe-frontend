@@ -126,3 +126,31 @@
 .animate-typewriter-cursor {
 	animation: typewriter-cursor-blink 1s step-end infinite;
 }
+
+@keyframes quiz-question-in {
+	from {
+		opacity: 0;
+		transform: translateY(-6px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes quiz-options-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+.animate-quiz-question {
+	animation: quiz-question-in 0.35s ease-out forwards;
+}
+
+.animate-quiz-options {
+	animation: quiz-options-in 0.35s ease-out both;
+}
