@@ -64,7 +64,7 @@ export default function SkinBuilderPage() {
 	// When step changes: show question first, then options after delay
 	useEffect(() => {
 		setShowOptions(false);
-		const t = setTimeout(() => setShowOptions(true), 1000);
+		const t = setTimeout(() => setShowOptions(true), 700);
 		return () => clearTimeout(t);
 	}, [step]);
 
