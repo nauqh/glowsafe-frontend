@@ -9,7 +9,7 @@ const inconsolata = Inconsolata({
 });
 
 export const metadata: Metadata = {
-	title: "GlowSafe | Personal UV Guidance for Young Australians",
+	title: "Sun Smart that Fits the Way You Live",
 	description:
 		"Personalised UV guidance based on your skin type, location, and plans. Real-time BOM data, no lectures — just clear advice for sun-smart confidence.",
 	icons: {

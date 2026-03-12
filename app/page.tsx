@@ -111,12 +111,12 @@ export default function Home() {
 				</header>
 
 				{/* Hero */}
-				<section className="relative z-10 flex min-h-[calc(100vh-5.75rem)] flex-col justify-end px-5 pb-16 md:min-h-[calc(100vh-5.75rem)] md:items-center md:justify-center md:px-6 md:pb-0">
+				<section className="relative z-10 flex min-h-[calc(100vh-5.75rem)] flex-col justify-end px-5 pb-16 pt-16 md:min-h-[calc(100vh-5.75rem)] md:items-center md:justify-center md:px-6 md:pb-0 md:pt-24">
 					<div className="w-full max-w-5xl text-left md:text-center">
-						<p className="text-xs font-medium tracking-[0.2em] text-white/70 sm:text-xs">
+						<p className="text-xs font-bold tracking-[0.2em] text-white sm:text-xs">
 							Sun smart that fits the way you live
 						</p>
-						<h1 className="mt-4 text-3xl font-normal leading-tight tracking-tight text-white sm:text-4xl md:mt-5 md:text-6xl">
+						<h1 className="mt-4 text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl md:mt-5 md:text-6xl">
 							Glow smart.{" "}
 							<span className="text-yellow">Stay safe.</span>
 						</h1>

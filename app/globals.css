@@ -69,7 +69,7 @@
 	--popover-foreground: #1c1917;
 	--primary: #1c1917;
 	--primary-foreground: #faf7f2;
-	--secondary: #f0eae0;
+	--secondary: #fffef2;
 	--secondary-foreground: #44403c;
 	--muted: #ede8e1;
 	--muted-foreground: #9c958c;
@@ -110,4 +110,19 @@
 	html {
 		@apply scroll-smooth font-sans;
 	}
+}
+
+@keyframes typewriter-cursor-blink {
+	0%,
+	45% {
+		opacity: 1;
+	}
+	50%,
+	100% {
+		opacity: 0;
+	}
+}
+
+.animate-typewriter-cursor {
+	animation: typewriter-cursor-blink 1s step-end infinite;
 }
