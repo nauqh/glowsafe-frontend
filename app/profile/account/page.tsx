@@ -6,7 +6,10 @@ import { useRouter } from "next/navigation";
 import { LogOut, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
-import { PROFILE_STORAGE_KEY, USER_EMAIL_STORAGE_KEY } from "@/lib/skin-profile-data";
+import {
+	PROFILE_STORAGE_KEY,
+	USER_EMAIL_STORAGE_KEY,
+} from "@/lib/skin-profile-data";
 
 export default function AccountPage() {
 	const router = useRouter();
@@ -52,14 +55,13 @@ export default function AccountPage() {
 							label="Joined"
 							value={
 								session.user.createdAt
-									? new Date(session.user.createdAt).toLocaleDateString(
-											"en-AU",
-											{
-												year: "numeric",
-												month: "long",
-												day: "numeric",
-											},
-										)
+									? new Date(
+											session.user.createdAt,
+										).toLocaleDateString("en-AU", {
+											year: "numeric",
+											month: "long",
+											day: "numeric",
+										})
 									: "—"
 							}
 						/>
@@ -76,7 +78,8 @@ export default function AccountPage() {
 								Sign out
 							</p>
 							<p className="mt-0.5 text-xs text-muted-foreground">
-								You can always sign back in to access your profile.
+								You can always sign back in to access your
+								profile.
 							</p>
 						</div>
 						<Button
@@ -84,7 +87,7 @@ export default function AccountPage() {
 							size="sm"
 							onClick={handleSignOut}
 							disabled={isSigningOut}
-							className="gap-2"
+							className="gap-2 cursor-pointer"
 						>
 							<LogOut className="size-3.5" />
 							{isSigningOut ? "Signing out..." : "Sign out"}
@@ -99,14 +102,15 @@ export default function AccountPage() {
 								Reset profile
 							</p>
 							<p className="mt-0.5 text-xs text-muted-foreground">
-								Clear your skin profile data from this device. You can rebuild
-								it from the quiz.
+								Clear your skin profile data from this device.
+								You can rebuild it from the quiz.
 							</p>
 						</div>
 						<Button
 							variant="destructive"
 							size="sm"
 							onClick={handleClearProfile}
+							className="cursor-pointer"
 						>
 							Reset
 						</Button>
@@ -124,7 +128,11 @@ export default function AccountPage() {
 							</p>
 						</div>
 						<Link href="/skin-builder" className="cursor-pointer">
-							<Button variant="outline" size="sm" className="gap-2 cursor-pointer">
+							<Button
+								variant="outline"
+								size="sm"
+								className="gap-2 cursor-pointer"
+							>
 								<ExternalLink className="size-3.5" />
 								Skin Builder
 							</Button>

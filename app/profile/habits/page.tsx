@@ -14,7 +14,10 @@ import {
 	PROFILE_STORAGE_KEY,
 } from "@/lib/skin-profile-data";
 
-function labelFor<T extends { id: string; label: string }>(options: readonly T[], id: string | undefined) {
+function labelFor<T extends { id: string; label: string }>(
+	options: readonly T[],
+	id: string | undefined,
+) {
 	if (!id) return null;
 	return options.find((o) => o.id === id)?.label ?? id;
 }
@@ -50,7 +53,8 @@ export default function SunHabitsPage() {
 				Sun habits
 			</h1>
 			<p className="mt-1 text-sm text-muted-foreground">
-				Your answers from the Skin Builder quiz. We use these to tailor your sun-safety report and recommendations.
+				Your answers from the Skin Builder quiz. We use these to tailor
+				your sun-safety report and recommendations.
 			</p>
 
 			{!profile ? (
@@ -70,26 +74,43 @@ export default function SunHabitsPage() {
 					<div className="mt-8 space-y-6">
 						<Section
 							title="Burn history"
-							value={labelFor(BURN_HISTORY_OPTIONS, profile.burnHistory)}
+							value={labelFor(
+								BURN_HISTORY_OPTIONS,
+								profile.burnHistory,
+							)}
 						/>
 						<Section
 							title="Weekday time outdoors"
-							value={labelFor(WORK_PATTERN_OPTIONS, profile.workPattern)}
+							value={labelFor(
+								WORK_PATTERN_OPTIONS,
+								profile.workPattern,
+							)}
 						/>
 						<Section
 							title="Peak sun exposure"
-							value={labelFor(PEAK_SUN_OPTIONS, profile.peakSunExposure)}
+							value={labelFor(
+								PEAK_SUN_OPTIONS,
+								profile.peakSunExposure,
+							)}
 						/>
 						<Section
 							title="Sunscreen frequency"
-							value={labelFor(SUNSCREEN_FREQ_OPTIONS, profile.sunscreenFrequency)}
+							value={labelFor(
+								SUNSCREEN_FREQ_OPTIONS,
+								profile.sunscreenFrequency,
+							)}
 						/>
 						<Section
 							title="Protection habits"
 							value={
 								profile.protectionHabits?.length
 									? profile.protectionHabits
-											.map((id) => PROTECTION_HABIT_OPTIONS.find((o) => o.id === id)?.label ?? id)
+											.map(
+												(id) =>
+													PROTECTION_HABIT_OPTIONS.find(
+														(o) => o.id === id,
+													)?.label ?? id,
+											)
 											.join(", ")
 									: undefined
 							}
@@ -98,7 +119,11 @@ export default function SunHabitsPage() {
 
 					<div className="mt-10">
 						<Link href="/skin-builder">
-							<Button variant="outline" size="lg" className="gap-2">
+							<Button
+								variant="outline"
+								size="lg"
+								className="gap-2 cursor-pointer"
+							>
 								<RefreshCw className="size-4" />
 								Retake full quiz
 							</Button>
@@ -110,7 +135,13 @@ export default function SunHabitsPage() {
 	);
 }
 
-function Section({ title, value }: { title: string; value: string | null | undefined }) {
+function Section({
+	title,
+	value,
+}: {
+	title: string;
+	value: string | null | undefined;
+}) {
 	return (
 		<div>
 			<p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
