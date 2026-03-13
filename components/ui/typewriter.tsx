@@ -71,7 +71,7 @@ export function Typewriter({
 		return () => clearTimeout(startTimer);
 	}, [phrases.length, startDelay]);
 
-	// Type character by character through phrases — only restart when started or phrases (reference) changes
+	// Type character by character through phrases — only restart when started or phrase count changes
 	useEffect(() => {
 		if (!started || phrases.length === 0) return;
 
@@ -169,7 +169,7 @@ export function Typewriter({
 				endDelayTimeoutRef.current = null;
 			}
 		};
-	}, [started, phrases]);
+	}, [started, phrases.length]);
 
 	const isCurrentPhraseActive = phraseIndex < phrases.length && !done;
 	// During phraseDelay: show cursor at end of last completed phrase (same line), not on a new line

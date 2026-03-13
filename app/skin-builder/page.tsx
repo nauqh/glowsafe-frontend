@@ -34,9 +34,19 @@ import {
 
 const TOTAL_STEPS = 8;
 
-const LOADING_PHRASES = [
-	"Crafting the most personalised questions for you...",
-	"Almost there...",
+type QuizInsightSection = {
+	heading: string;
+	body: string;
+};
+
+type QuizInsight = {
+	vibe: { hex: string; label: string };
+	sections: QuizInsightSection[];
+};
+
+const LOADING_PHRASES = ["Crafting the most personalised questions for you..."];
+const ANALYSIS_LOADING_PHRASES = [
+	"Translating your quiz into real-world UV advice",
 ];
 
 export default function SkinBuilderPage() {
@@ -60,11 +70,15 @@ export default function SkinBuilderPage() {
 	);
 	const [completed, setCompleted] = useState(false);
 	const [showOptions, setShowOptions] = useState(false);
+	const [insight, setInsight] = useState<QuizInsight | null>(null);
+	const [insightLoading, setInsightLoading] = useState(false);
+	const [insightError, setInsightError] = useState<string | null>(null);
+	const [analysisDone, setAnalysisDone] = useState(false);
 
 	// When step changes: show question first, then options after delay
 	useEffect(() => {
 		setShowOptions(false);
-		const t = setTimeout(() => setShowOptions(true), 700);
+		const t = setTimeout(() => setShowOptions(true), 500);
 		return () => clearTimeout(t);
 	}, [step]);
 
@@ -98,7 +112,7 @@ export default function SkinBuilderPage() {
 		(step === 6 && sunscreenFreq !== null) ||
 		step === 7; // protection habits optional
 
-	const handleNext = useCallback(() => {
+	const handleNext = useCallback(async () => {
 		if (step < TOTAL_STEPS - 1) {
 			setStep((s) => s + 1);
 			return;
@@ -123,10 +137,35 @@ export default function SkinBuilderPage() {
 			// ignore
 		}
 
-		if (session?.user) {
-			router.push("/profile");
-		} else {
-			setCompleted(true);
+		// Call server to get personalised analysis
+		setCompleted(true);
+		setAnalysisDone(false);
+		setInsightLoading(true);
+		setInsight(null);
+		setInsightError(null);
+
+		try {
+			const res = await fetch("http://localhost:8000/quiz/skin-profile", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(profile),
+			});
+
+			if (!res.ok) {
+				throw new Error(`HTTP ${res.status}`);
+			}
+
+			const data = (await res.json()) as QuizInsight;
+			setInsight(data);
+		} catch (error) {
+			console.error("Failed to fetch quiz insight", error);
+			setInsightError(
+				"Couldn\u2019t fetch your analysis just now. Please try again later.",
+			);
+		} finally {
+			setInsightLoading(false);
 		}
 	}, [
 		step,
@@ -138,8 +177,6 @@ export default function SkinBuilderPage() {
 		peakSun,
 		sunscreenFreq,
 		protectionHabits,
-		router,
-		session,
 	]);
 
 	const handleBack = useCallback(() => {
@@ -163,8 +200,51 @@ export default function SkinBuilderPage() {
 		);
 	}
 
+	// —— Analysis loading screen ——
+	if (completed && insightLoading) {
+		return (
+			<div className="flex min-h-screen flex-col items-center justify-center bg-background px-6">
+				<div className="flex min-h-[80px] flex-col items-center justify-center sm:min-h-[100px]">
+					<div className="flex items-baseline gap-1 text-[15px] text-foreground/85 sm:text-base">
+						<Typewriter
+							phrases={ANALYSIS_LOADING_PHRASES}
+							charDelay={26}
+							phraseDelay={800}
+							startDelay={200}
+							endDelay={300}
+							cursor={false}
+							className="text-left"
+							paragraphClassName=""
+						/>
+						<span className="loading-dots" aria-hidden>
+							<span />
+							<span />
+							<span />
+						</span>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
 	// —— Completion screen ——
 	if (completed && skinTypeId && locationId) {
+		if (!insight) {
+			return (
+				<div className="flex min-h-screen flex-col items-center justify-center bg-background px-6">
+					<div className="max-w-md text-center">
+						<p className="text-sm font-medium text-foreground">
+							We couldn&apos;t load your personalised analysis.
+						</p>
+						<p className="mt-2 text-sm text-muted-foreground">
+							{insightError ??
+								"Please check that the analysis service is running on localhost:8000 and try again."}
+						</p>
+					</div>
+				</div>
+			);
+		}
+
 		const riskLevel = getUvRiskLevel(skinTypeId, locationId, activityIds);
 		const riskStyle = UV_RISK_STYLES[riskLevel];
 		const skinLabel =
@@ -172,103 +252,92 @@ export default function SkinBuilderPage() {
 		const locationLabel =
 			AUSTRALIAN_LOCATIONS.find((l) => l.id === locationId)?.label ?? "";
 
+		const analysis = insight;
+
 		return (
 			<div className="flex min-h-screen flex-col overflow-hidden bg-background sm:h-screen">
 				<main className="min-h-0 flex-1 overflow-y-auto">
-					<div className="mx-auto max-w-md px-4 py-10 sm:max-w-lg sm:px-6 sm:py-14 md:py-20">
-						<div className="flex items-center gap-2 text-sm text-muted-foreground">
-							<Check className="size-4 shrink-0 text-safe" />
-							<span>Quiz complete</span>
-						</div>
-						<h1 className="mt-3 text-xl font-medium tracking-tight text-foreground sm:text-2xl md:text-3xl">
-							Your profile is ready
-						</h1>
-						<p className="mt-2 text-sm text-muted-foreground">
-							Sign up to save it and get personalised UV advice
-							and sun-safety recommendations.
-						</p>
+					<div className="mx-auto flex max-w-5xl flex-col px-4 py-10 sm:px-6 sm:py-14 md:py-20">
+						{/* Simple top heading + vibe */}
+						<section className="max-w-3xl text-left animate-analysis-header">
+							<p className="text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground">
+								GlowSafe • UV story
+							</p>
+							<h1 className="mt-3 text-2xl font-medium tracking-tight text-foreground sm:text-3xl md:text-4xl">
+								{analysis.vibe.label}
+							</h1>
+							<p className="mt-3 max-w-xl text-sm text-muted-foreground md:text-[15px]">
+								For {skinLabel.toLowerCase()} in {locationLabel},{" "}
+								plus your usual plans outdoors, here&apos;s how
+								the sun really shows up for you.
+							</p>
+							<p className="mt-2 text-xs font-semibold uppercase tracking-[0.26em]" style={{ color: analysis.vibe.hex }}>
+								{UV_RISK_LABELS[riskLevel]} UV
+							</p>
+						</section>
 
-						<div className="mt-8 rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-5">
-							<div className="grid gap-4 sm:grid-cols-2">
-								<div>
-									<p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-										Skin type
-									</p>
-									<p className="mt-1 text-sm font-medium text-foreground">
-										{skinLabel}
-									</p>
-								</div>
-								<div>
-									<p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-										Location
-									</p>
-									<p className="mt-1 text-sm font-medium text-foreground">
-										{locationLabel}
-									</p>
-								</div>
-								<div className="sm:col-span-2">
-									<p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-										Activities
-									</p>
-									<p className="mt-1 text-sm font-medium text-foreground">
-										{activityIds
-											.map(
-												(id) =>
-													OUTDOOR_ACTIVITIES.find(
-														(a) => a.id === id,
-													)?.label ?? id,
-											)
-											.join(", ")}
-									</p>
-								</div>
-								<div>
-									<p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-										UV risk
-									</p>
-									<span
-										className={cn(
-											"mt-1 inline-block rounded-full px-3 py-0.5 text-sm font-semibold",
-											riskStyle.bg,
-											riskStyle.text,
-										)}
-									>
-										{UV_RISK_LABELS[riskLevel]}
-									</span>
-								</div>
+						{/* Main body: narrative + simple CTAs */}
+						<section className="mt-10 max-w-3xl">
+							{/* Narrative analysis as flowing paragraphs (heading + body, sequential within one typewriter) */}
+							<div className="max-w-2xl text-left">
+								<Typewriter
+									phrases={analysis.sections.flatMap(
+										(section) => [
+											`${section.heading}.`,
+											section.body,
+										],
+									)}
+									charDelay={22}
+									phraseDelay={700}
+									startDelay={400}
+									endDelay={300}
+									cursor
+									onComplete={() => setAnalysisDone(true)}
+									className=""
+									paragraphClassName="mb-4 text-[15px] leading-relaxed text-foreground/85 sm:text-base"
+								/>
 							</div>
-						</div>
+							{/* Simple CTAs under analysis */}
+							{analysisDone && (
+								<div className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4 animate-analysis-cta">
+									<Link
+										href="/signup?callbackUrl=%2Fprofile"
+										className="block"
+									>
+										<Button
+											size="sm"
+											className="w-full gap-2 sm:w-auto"
+										>
+											<Sparkles className="size-4 shrink-0" />
+											Sign up to save this
+										</Button>
+									</Link>
+									<Link
+										href="/login?callbackUrl=%2Fprofile"
+										className="block"
+									>
+										<Button
+											variant="outline"
+											size="sm"
+											className="w-full gap-2 sm:w-auto"
+										>
+											I already have an account
+										</Button>
+									</Link>
+								</div>
+							)}
+						</section>
 
-						<div className="mt-8 flex flex-col gap-3">
-							<Link
-								href="/signup?callbackUrl=%2Fprofile"
-								className="block"
-							>
-								<Button size="lg" className="w-full gap-2">
-									<Sparkles className="size-4 shrink-0" />
-									Sign up to save my profile
-								</Button>
-							</Link>
-							<Link
-								href="/login?callbackUrl=%2Fprofile"
-								className="block"
-							>
-								<Button
-									variant="outline"
-									size="lg"
-									className="w-full gap-2"
+						{analysisDone && (
+							<div className="mt-8 text-center">
+								<Link
+									href="/"
+									className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
 								>
-									I already have an account
-								</Button>
-							</Link>
-						</div>
-						<div className="mt-6 text-center">
-							<Link
-								href="/"
-								className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
-							>
-								Skip for now and go home
-							</Link>
-						</div>
+									Skip for now and go home
+								</Link>
+							</div>
+						)}
 					</div>
 				</main>
 			</div>
@@ -334,7 +403,7 @@ export default function SkinBuilderPage() {
 												)}
 											>
 												<div
-													className="size-10 shrink-0 rounded-full border border-border shadow-inner sm:size-9"
+													className="size-10 shrink-0 rounded-lg border border-border shadow-inner sm:size-9"
 													style={{
 														backgroundColor:
 															skin.color,
