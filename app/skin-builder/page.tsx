@@ -16,6 +16,7 @@ import {
 	type PeakSunExposure,
 	type SunscreenFrequency,
 	type ProtectionHabit,
+	type QuizInsight,
 	SKIN_TYPES,
 	AUSTRALIAN_LOCATIONS,
 	OUTDOOR_ACTIVITIES,
@@ -28,21 +29,12 @@ import {
 	UV_RISK_LABELS,
 	UV_RISK_STYLES,
 	PROFILE_STORAGE_KEY,
+	PROFILE_INSIGHT_STORAGE_KEY,
 } from "@/lib/skin-profile-data";
 
 const API_BASE_URL =
 	process.env.NEXT_PUBLIC_BACKEND_URL ??
 	"https://glowsafe-production.up.railway.app";
-
-type QuizInsightSection = {
-	heading: string;
-	body: string;
-};
-
-type QuizInsight = {
-	vibe: { hex: string; label: string };
-	sections: QuizInsightSection[];
-};
 
 const LOADING_PHRASES = ["Crafting the most personalised questions for you..."];
 const ANALYSIS_LOADING_PHRASES = [
@@ -203,6 +195,14 @@ export default function SkinBuilderPage() {
 
 			const data = (await res.json()) as QuizInsight;
 			setInsight(data);
+			try {
+				localStorage.setItem(
+					PROFILE_INSIGHT_STORAGE_KEY,
+					JSON.stringify(data),
+				);
+			} catch {
+				// ignore
+			}
 		} catch (error) {
 			console.error("Failed to fetch quiz insight", error);
 			setInsightError(

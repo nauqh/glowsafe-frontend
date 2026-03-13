@@ -164,3 +164,15 @@ export const UV_RISK_STYLES: Record<
 
 export const PROFILE_STORAGE_KEY = "glowsafe_skin_profile";
 export const USER_EMAIL_STORAGE_KEY = "glowsafe_user_email";
+
+export type QuizInsightSection = {
+	heading: string;
+	body: string;
+};
+
+export type QuizInsight = {
+	vibe: { hex: string; label: string };
+	sections: QuizInsightSection[];
+};
+
+export const PROFILE_INSIGHT_STORAGE_KEY = "glowsafe_skin_profile_insight";
