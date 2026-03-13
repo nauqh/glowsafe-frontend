@@ -34,6 +34,10 @@ import {
 
 const TOTAL_STEPS = 8;
 
+const API_BASE_URL =
+	process.env.NEXT_PUBLIC_BACKEND_URL ??
+	"https://glowsafe-production.up.railway.app";
+
 type QuizInsightSection = {
 	heading: string;
 	body: string;
@@ -145,7 +149,7 @@ export default function SkinBuilderPage() {
 		setInsightError(null);
 
 		try {
-			const res = await fetch("http://localhost:8000/quiz/skin-profile", {
+			const res = await fetch(`${API_BASE_URL}/quiz/skin-profile`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -267,11 +271,14 @@ export default function SkinBuilderPage() {
 								{analysis.vibe.label}
 							</h1>
 							<p className="mt-3 max-w-xl text-sm text-muted-foreground md:text-[15px]">
-								For {skinLabel.toLowerCase()} in {locationLabel},{" "}
-								plus your usual plans outdoors, here&apos;s how
-								the sun really shows up for you.
+								For {skinLabel.toLowerCase()} in {locationLabel}
+								, plus your usual plans outdoors, here&apos;s
+								how the sun really shows up for you.
 							</p>
-							<p className="mt-2 text-xs font-semibold uppercase tracking-[0.26em]" style={{ color: analysis.vibe.hex }}>
+							<p
+								className="mt-2 text-xs font-semibold uppercase tracking-[0.26em]"
+								style={{ color: analysis.vibe.hex }}
+							>
 								{UV_RISK_LABELS[riskLevel]} UV
 							</p>
 						</section>
