@@ -6,6 +6,7 @@ import { ArrowRight, MapPin, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Typewriter } from "@/components/ui/typewriter";
 import { cn } from "@/lib/utils";
+import { authClient } from "@/lib/auth-client";
 import {
 	type SkinProfile,
 	type SkinTypeId,
@@ -69,6 +70,7 @@ export default function SkinBuilderPage() {
 	const [headerDone, setHeaderDone] = useState(false);
 	const [taglineDone, setTaglineDone] = useState(false);
 	const [titleDone, setTitleDone] = useState(false);
+	const { data: session } = authClient.useSession();
 
 	// Progress: count how many of the 8 questions have been answered
 	const answeredCount =
@@ -203,6 +205,24 @@ export default function SkinBuilderPage() {
 			} catch {
 				// ignore
 			}
+
+			// If the user is logged in, persist this quiz + analysis
+			const email = session?.user?.email;
+			if (email) {
+				try {
+					await fetch(`${API_BASE_URL}/quiz/add-skin-profile`, {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							email,
+							quiz: profile,
+							analysis: data,
+						}),
+					});
+				} catch (error) {
+					console.error("Failed to persist skin profile from quiz", error);
+				}
+			}
 		} catch (error) {
 			console.error("Failed to fetch quiz insight", error);
 			setInsightError(
@@ -220,6 +240,7 @@ export default function SkinBuilderPage() {
 		peakSun,
 		sunscreenFreq,
 		protectionHabits,
+		session?.user?.email,
 	]);
 
 	const handleTypewriterComplete = useCallback(() => {
@@ -377,11 +398,11 @@ export default function SkinBuilderPage() {
 									<div className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4 animate-analysis-cta">
 										<Link
 											href="/signup?callbackUrl=%2Fprofile"
-											className="block"
+											className="block cursor-pointer"
 										>
 											<Button
 												size="sm"
-												className="w-full gap-2 sm:w-auto"
+												className="w-full gap-2 sm:w-auto cursor-pointer"
 											>
 												<Sparkles className="size-4 shrink-0" />
 												Sign up to save this
@@ -389,12 +410,12 @@ export default function SkinBuilderPage() {
 										</Link>
 										<Link
 											href="/login?callbackUrl=%2Fprofile"
-											className="block"
+											className="block cursor-pointer"
 										>
 											<Button
 												variant="outline"
 												size="sm"
-												className="w-full gap-2 sm:w-auto"
+												className="w-full gap-2 sm:w-auto cursor-pointer"
 											>
 												I already have an account
 											</Button>
@@ -408,7 +429,7 @@ export default function SkinBuilderPage() {
 							<div className="mt-8 text-center">
 								<Link
 									href="/"
-									className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+									className="cursor-pointer text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
 								>
 									Skip for now and go home
 								</Link>

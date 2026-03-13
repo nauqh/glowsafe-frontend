@@ -26,13 +26,13 @@ export function UserMenu() {
       <div className="flex items-center gap-4">
         <Link
           href="/login"
-          className="text-sm font-semibold text-white decoration-white/30 underline-offset-4 transition-colors duration-300 hover:text-white hover:decoration-white/70 group-hover:text-foreground/70 group-hover:decoration-transparent group-hover:hover:text-foreground"
+          className="cursor-pointer text-sm font-semibold text-white decoration-white/30 underline-offset-4 transition-colors duration-300 hover:text-white hover:decoration-white/70 group-hover:text-foreground/70 group-hover:decoration-transparent group-hover:hover:text-foreground"
         >
           Log in
         </Link>
         <Link
           href="/signup"
-          className="rounded-full border border-white/60 px-4 py-1.5 text-sm font-semibold text-white transition-colors duration-300 hover:border-white hover:bg-white/10 hover:text-white group-hover:border-foreground/40 group-hover:text-foreground group-hover:hover:bg-foreground group-hover:hover:text-background"
+          className="cursor-pointer rounded-full border border-white/60 px-4 py-1.5 text-sm font-semibold text-white transition-colors duration-300 hover:border-white hover:bg-white/10 hover:text-white group-hover:border-foreground/40 group-hover:text-foreground group-hover:hover:bg-foreground group-hover:hover:text-background"
         >
           Sign up
         </Link>
@@ -44,7 +44,7 @@ export function UserMenu() {
     <div className="flex items-center gap-3">
       <Link
         href="/profile"
-        className="text-sm font-semibold text-white decoration-white/30 underline-offset-4 transition-colors duration-300 hover:text-white hover:decoration-white/70 group-hover:text-foreground/70 group-hover:decoration-transparent group-hover:hover:text-foreground"
+        className="cursor-pointer text-sm font-semibold text-white decoration-white/30 underline-offset-4 transition-colors duration-300 hover:text-white hover:decoration-white/70 group-hover:text-foreground/70 group-hover:decoration-transparent group-hover:hover:text-foreground"
       >
         Profile
       </Link>

@@ -176,3 +176,4 @@ export type QuizInsight = {
 };
 
 export const PROFILE_INSIGHT_STORAGE_KEY = "glowsafe_skin_profile_insight";
+export const PROFILE_PERSISTED_STORAGE_KEY = "glowsafe_skin_profile_persisted";

@@ -67,7 +67,7 @@ export default function ProfileLayout({
 
 	useEffect(() => {
 		if (!isPending && !session?.user) {
-			router.replace("/skin-builder");
+			router.replace("/");
 		}
 	}, [isPending, session, router]);
 
@@ -123,7 +123,7 @@ export default function ProfileLayout({
 
 						<Link
 							href="/"
-							className="text-lg font-semibold tracking-tight text-foreground"
+							className="cursor-pointer text-lg font-semibold tracking-tight text-foreground"
 						>
 							GlowSafe
 						</Link>
@@ -134,7 +134,7 @@ export default function ProfileLayout({
 
 					<Link
 						href="/"
-						className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+						className="flex cursor-pointer items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
 					>
 						<Home className="size-3.5" />
 						Home
@@ -191,7 +191,7 @@ export default function ProfileLayout({
 										<Link
 											key={item.href}
 											href={item.href}
-											className="group flex items-center py-1 text-foreground"
+											className="group flex cursor-pointer items-center py-1 text-foreground"
 											title={
 												!isOpen ? item.label : undefined
 											}
@@ -313,7 +313,7 @@ export default function ProfileLayout({
 												<Link
 													key={item.href}
 													href={item.href}
-													className="group flex items-center py-1 text-foreground"
+													className="group flex cursor-pointer items-center py-1 text-foreground"
 												>
 													<div className="mr-1.5 flex w-[6px] shrink-0 items-center justify-center">
 														<div

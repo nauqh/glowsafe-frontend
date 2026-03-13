@@ -70,7 +70,7 @@ export default function SkinProfilePage() {
 							href="/skin-builder"
 							className={cn(
 								buttonVariants({ size: "lg" }),
-								"gap-2",
+								"gap-2 cursor-pointer",
 							)}
 						>
 							Start the quiz
@@ -224,8 +224,8 @@ export default function SkinProfilePage() {
 					or activities. Your existing data will be replaced.
 				</p>
 				<div className="mt-4">
-					<Link href="/skin-builder">
-						<Button variant="outline" size="sm" className="gap-2">
+					<Link href="/skin-builder" className="cursor-pointer">
+						<Button variant="outline" size="sm" className="gap-2 cursor-pointer">
 							<ExternalLink className="size-3.5" />
 							Retake the quiz
 						</Button>

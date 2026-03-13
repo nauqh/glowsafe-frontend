@@ -123,8 +123,8 @@ export default function AccountPage() {
 								Start fresh with the skin builder.
 							</p>
 						</div>
-						<Link href="/skin-builder">
-							<Button variant="outline" size="sm" className="gap-2">
+						<Link href="/skin-builder" className="cursor-pointer">
+							<Button variant="outline" size="sm" className="gap-2 cursor-pointer">
 								<ExternalLink className="size-3.5" />
 								Skin Builder
 							</Button>
