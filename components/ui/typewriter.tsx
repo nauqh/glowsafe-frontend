@@ -24,6 +24,8 @@ export interface TypewriterProps {
 	className?: string;
 	/** Class name for each paragraph */
 	paragraphClassName?: string;
+	/** Optional node rendered at the end of the current line (e.g. loading dots) */
+	trailing?: React.ReactNode;
 }
 
 export function Typewriter({
@@ -37,6 +39,7 @@ export function Typewriter({
 	cursorChar = "|",
 	className,
 	paragraphClassName,
+	trailing,
 }: TypewriterProps) {
 	const [completedPhrases, setCompletedPhrases] = useState<string[]>([]);
 	const [currentPhraseDisplay, setCurrentPhraseDisplay] = useState("");
@@ -193,6 +196,10 @@ export function Typewriter({
 								{cursorChar}
 							</span>
 						)}
+					{trailing &&
+						isCurrentPhraseActive &&
+						currentPhraseDisplay === "" &&
+						i === completedPhrases.length - 1 && <>{trailing}</>}
 				</p>
 			))}
 			{/* New line only when we're typing; when waiting for next phrase, cursor stays on last line */}
@@ -210,6 +217,7 @@ export function Typewriter({
 									{cursorChar}
 								</span>
 							)}
+							{trailing && <>{trailing}</>}
 						</span>
 					</p>
 				)}

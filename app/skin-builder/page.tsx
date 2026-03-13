@@ -1,13 +1,11 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ArrowRight, ArrowLeft, MapPin, Sparkles, Check } from "lucide-react";
+import { ArrowRight, MapPin, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Typewriter } from "@/components/ui/typewriter";
 import { cn } from "@/lib/utils";
-import { authClient } from "@/lib/auth-client";
 import {
 	type SkinProfile,
 	type SkinTypeId,
@@ -32,8 +30,6 @@ import {
 	PROFILE_STORAGE_KEY,
 } from "@/lib/skin-profile-data";
 
-const TOTAL_STEPS = 8;
-
 const API_BASE_URL =
 	process.env.NEXT_PUBLIC_BACKEND_URL ??
 	"https://glowsafe-production.up.railway.app";
@@ -51,16 +47,16 @@ type QuizInsight = {
 const LOADING_PHRASES = ["Crafting the most personalised questions for you..."];
 const ANALYSIS_LOADING_PHRASES = [
 	"Translating your quiz into real-world UV advice",
+	"Checking UV levels and sun safety for your location",
+	"Personalising tips based on your skin type and habits",
+	"Analysing your answers — almost there",
+	"Putting together your custom sun-smart plan",
 ];
 
 export default function SkinBuilderPage() {
-	const router = useRouter();
-	const { data: session } = authClient.useSession();
-
 	const [loading, setLoading] = useState(true);
 	const loadingDoneRef = useRef(false);
 
-	const [step, setStep] = useState(0);
 	const [skinTypeId, setSkinTypeId] = useState<SkinTypeId | null>(null);
 	const [locationId, setLocationId] = useState<LocationId | null>(null);
 	const [activityIds, setActivityIds] = useState<ActivityId[]>([]);
@@ -73,26 +69,25 @@ export default function SkinBuilderPage() {
 		[],
 	);
 	const [completed, setCompleted] = useState(false);
-	const [showOptions, setShowOptions] = useState(false);
 	const [insight, setInsight] = useState<QuizInsight | null>(null);
 	const [insightLoading, setInsightLoading] = useState(false);
 	const [insightError, setInsightError] = useState<string | null>(null);
 	const [analysisDone, setAnalysisDone] = useState(false);
+	const [headerDone, setHeaderDone] = useState(false);
+	const [taglineDone, setTaglineDone] = useState(false);
+	const [titleDone, setTitleDone] = useState(false);
 
-	// When step changes: show question first, then options after delay
-	useEffect(() => {
-		setShowOptions(false);
-		const t = setTimeout(() => setShowOptions(true), 500);
-		return () => clearTimeout(t);
-	}, [step]);
-
-	const handleTypewriterComplete = useCallback(() => {
-		if (loadingDoneRef.current) return;
-		loadingDoneRef.current = true;
-		setTimeout(() => setLoading(false), 1000);
-	}, []);
-
-	const progress = ((step + 1) / TOTAL_STEPS) * 100;
+	// Progress: count how many of the 8 questions have been answered
+	const answeredCount =
+		(skinTypeId ? 1 : 0) +
+		(locationId ? 1 : 0) +
+		(activityIds.length > 0 ? 1 : 0) +
+		(burnHistory ? 1 : 0) +
+		(workPattern ? 1 : 0) +
+		(peakSun ? 1 : 0) +
+		(sunscreenFreq ? 1 : 0) +
+		(protectionHabits.length > 0 ? 1 : 0);
+	const progress = (answeredCount / 8) * 100;
 
 	const toggleActivity = useCallback((id: ActivityId) => {
 		setActivityIds((prev) =>
@@ -106,22 +101,10 @@ export default function SkinBuilderPage() {
 		);
 	}, []);
 
-	const canNext =
-		(step === 0 && skinTypeId !== null) ||
-		(step === 1 && locationId !== null) ||
-		(step === 2 && activityIds.length > 0) ||
-		(step === 3 && burnHistory !== null) ||
-		(step === 4 && workPattern !== null) ||
-		(step === 5 && peakSun !== null) ||
-		(step === 6 && sunscreenFreq !== null) ||
-		step === 7; // protection habits optional
+	const canSubmit =
+		skinTypeId !== null && locationId !== null && activityIds.length > 0;
 
-	const handleNext = useCallback(async () => {
-		if (step < TOTAL_STEPS - 1) {
-			setStep((s) => s + 1);
-			return;
-		}
-
+	const handleSubmit = useCallback(async () => {
 		if (!skinTypeId || !locationId || activityIds.length === 0) return;
 
 		const profile: SkinProfile = {
@@ -140,10 +123,12 @@ export default function SkinBuilderPage() {
 		} catch {
 			// ignore
 		}
-
 		// Call server to get personalised analysis
 		setCompleted(true);
 		setAnalysisDone(false);
+		setHeaderDone(false);
+		setTaglineDone(false);
+		setTitleDone(false);
 		setInsightLoading(true);
 		setInsight(null);
 		setInsightError(null);
@@ -172,7 +157,6 @@ export default function SkinBuilderPage() {
 			setInsightLoading(false);
 		}
 	}, [
-		step,
 		skinTypeId,
 		locationId,
 		activityIds,
@@ -183,11 +167,13 @@ export default function SkinBuilderPage() {
 		protectionHabits,
 	]);
 
-	const handleBack = useCallback(() => {
-		if (step > 0) setStep((s) => s - 1);
-	}, [step]);
+	const handleTypewriterComplete = useCallback(() => {
+		if (loadingDoneRef.current) return;
+		loadingDoneRef.current = true;
+		setTimeout(() => setLoading(false), 1000);
+	}, []);
 
-	// —— Loading screen (typewriter then reveal quiz) ——
+	// —— Initial loading screen ——
 	if (loading) {
 		return (
 			<div className="flex min-h-screen flex-col items-center justify-center bg-background px-6 transition-opacity duration-500">
@@ -209,22 +195,20 @@ export default function SkinBuilderPage() {
 		return (
 			<div className="flex min-h-screen flex-col items-center justify-center bg-background px-6">
 				<div className="flex min-h-[80px] flex-col items-center justify-center sm:min-h-[100px]">
-					<div className="flex items-baseline gap-1 text-[15px] text-foreground/85 sm:text-base">
+					<div className="text-[15px] text-foreground/85 sm:text-base">
 						<Typewriter
 							phrases={ANALYSIS_LOADING_PHRASES}
 							charDelay={26}
-							phraseDelay={800}
+							phraseDelay={10000}
 							startDelay={200}
 							endDelay={300}
 							cursor={false}
 							className="text-left"
 							paragraphClassName=""
+							trailing={
+								<span className="loading-dots" aria-hidden />
+							}
 						/>
-						<span className="loading-dots" aria-hidden>
-							<span />
-							<span />
-							<span />
-						</span>
 					</div>
 				</div>
 			</div>
@@ -261,79 +245,109 @@ export default function SkinBuilderPage() {
 		return (
 			<div className="flex min-h-screen flex-col overflow-hidden bg-background sm:h-screen">
 				<main className="min-h-0 flex-1 overflow-y-auto">
-					<div className="mx-auto flex max-w-5xl flex-col px-4 py-10 sm:px-6 sm:py-14 md:py-20">
+					<div className="mx-auto flex w-full max-w-3xl flex-col px-4 py-10 sm:px-6 sm:py-14 md:py-20">
 						{/* Simple top heading + vibe */}
-						<section className="max-w-3xl text-left animate-analysis-header">
-							<p className="text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground">
-								GlowSafe • UV story
-							</p>
-							<h1 className="mt-3 text-2xl font-medium tracking-tight text-foreground sm:text-3xl md:text-4xl">
-								{analysis.vibe.label}
-							</h1>
-							<p className="mt-3 max-w-xl text-sm text-muted-foreground md:text-[15px]">
-								For {skinLabel.toLowerCase()} in {locationLabel}
-								, plus your usual plans outdoors, here&apos;s
-								how the sun really shows up for you.
-							</p>
-							<p
-								className="mt-2 text-xs font-semibold uppercase tracking-[0.26em]"
-								style={{ color: analysis.vibe.hex }}
-							>
-								{UV_RISK_LABELS[riskLevel]} UV
-							</p>
-						</section>
+						<section className="mx-auto w-full max-w-2xl text-left animate-analysis-header">
+							{/* Part 1: intro line */}
+							<Typewriter
+								phrases={["We can tell you're:"]}
+								charDelay={28}
+								startDelay={250}
+								endDelay={200}
+								cursor
+								onComplete={() => setTaglineDone(true)}
+								className=""
+								paragraphClassName="text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground"
+							/>
 
-						{/* Main body: narrative + simple CTAs */}
-						<section className="mt-10 max-w-3xl">
-							{/* Narrative analysis as flowing paragraphs (heading + body, sequential within one typewriter) */}
-							<div className="max-w-2xl text-left">
-								<Typewriter
-									phrases={analysis.sections.flatMap(
-										(section) => [
-											`${section.heading}.`,
-											section.body,
-										],
-									)}
-									charDelay={22}
-									phraseDelay={700}
-									startDelay={400}
-									endDelay={300}
-									cursor
-									onComplete={() => setAnalysisDone(true)}
-									className=""
-									paragraphClassName="mb-4 text-[15px] leading-relaxed text-foreground/85 sm:text-base"
-								/>
-							</div>
-							{/* Simple CTAs under analysis */}
-							{analysisDone && (
-								<div className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4 animate-analysis-cta">
-									<Link
-										href="/signup?callbackUrl=%2Fprofile"
-										className="block"
-									>
-										<Button
-											size="sm"
-											className="w-full gap-2 sm:w-auto"
+							{/* Part 2: vibe label */}
+							{taglineDone && (
+								<div className="mt-3">
+									<Typewriter
+										phrases={[analysis.vibe.label]}
+										charDelay={32}
+										startDelay={150}
+										endDelay={200}
+										cursor
+										onComplete={() => {
+											setTitleDone(true);
+											setHeaderDone(true);
+										}}
+										className=""
+										paragraphClassName="text-center text-2xl font-semibold tracking-tight text-foreground sm:text-3xl md:text-4xl"
+									/>
+								</div>
+							)}
+
+							{/* Part 3: descriptive line + risk line */}
+							{titleDone && (
+								<div className="mt-4 space-y-3">
+									<p className="text-xs font-semibold uppercase tracking-[0.26em] text-muted-foreground">
+										Your risk level is{" "}
+										<span
+											style={{ color: analysis.vibe.hex }}
 										>
-											<Sparkles className="size-4 shrink-0" />
-											Sign up to save this
-										</Button>
-									</Link>
-									<Link
-										href="/login?callbackUrl=%2Fprofile"
-										className="block"
-									>
-										<Button
-											variant="outline"
-											size="sm"
-											className="w-full gap-2 sm:w-auto"
-										>
-											I already have an account
-										</Button>
-									</Link>
+											{UV_RISK_LABELS[riskLevel]}
+										</span>
+										.
+									</p>
 								</div>
 							)}
 						</section>
+
+						{/* Main body: narrative + simple CTAs */}
+						{headerDone && (
+							<section className="mt-10 mx-auto w-full max-w-2xl animate-analysis-header">
+								{/* Narrative analysis as flowing paragraphs (heading + body, sequential within one typewriter) */}
+								<div className="w-full text-left">
+									<Typewriter
+										phrases={analysis.sections.flatMap(
+											(section) => [
+												`${section.heading}.`,
+												section.body,
+											],
+										)}
+										charDelay={22}
+										phraseDelay={700}
+										startDelay={400}
+										endDelay={300}
+										cursor
+										onComplete={() => setAnalysisDone(true)}
+										className=""
+										paragraphClassName="mb-4 text-[15px] leading-relaxed text-foreground/85 sm:text-base"
+									/>
+								</div>
+								{/* Simple CTAs under analysis */}
+								{analysisDone && (
+									<div className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4 animate-analysis-cta">
+										<Link
+											href="/signup?callbackUrl=%2Fprofile"
+											className="block"
+										>
+											<Button
+												size="sm"
+												className="w-full gap-2 sm:w-auto"
+											>
+												<Sparkles className="size-4 shrink-0" />
+												Sign up to save this
+											</Button>
+										</Link>
+										<Link
+											href="/login?callbackUrl=%2Fprofile"
+											className="block"
+										>
+											<Button
+												variant="outline"
+												size="sm"
+												className="w-full gap-2 sm:w-auto"
+											>
+												I already have an account
+											</Button>
+										</Link>
+									</div>
+								)}
+							</section>
+						)}
 
 						{analysisDone && (
 							<div className="mt-8 text-center">
@@ -351,10 +365,9 @@ export default function SkinBuilderPage() {
 		);
 	}
 
-	// —— Quiz steps ——
+	// —— Quiz: all questions on one page ——
 	return (
 		<div className="flex min-h-screen flex-col overflow-hidden bg-background sm:h-screen">
-			{/* Progress bar only */}
 			<div className="h-1 w-full shrink-0 bg-muted">
 				<div
 					className="h-full bg-accent transition-all duration-300 ease-out"
@@ -368,367 +381,280 @@ export default function SkinBuilderPage() {
 			</div>
 
 			<main className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-				<div className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 py-6 sm:px-6 sm:py-8 md:py-10">
-					<div className="flex flex-1 flex-col">
-						{/* Step 0 — Skin type */}
-						{step === 0 && (
-							<>
-								<div className="animate-quiz-question">
-									<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
-										How does your skin usually react to sun
-										exposure?
-									</h1>
-									<p className="mt-2 max-w-xl text-sm text-muted-foreground sm:mt-2.5 md:text-base">
-										Pick the option closest to your
-										un-tanned skin (e.g. inside of your
-										arm).{" "}
-										<a
-											href="https://www.cancer.nsw.gov.au/prevention-and-screening/preventing-cancer/preventing-skin-cancer/reduce-your-skin-cancer-risk/identify-your-skin-type"
-											target="_blank"
-											rel="noopener noreferrer"
-											className="text-muted-foreground/80 underline underline-offset-2 hover:text-foreground"
-											aria-label="Learn more about skin types"
+				<div className="mx-auto w-full max-w-3xl flex-1 px-4 py-6 sm:px-6 sm:py-8 md:py-10">
+					<div className="space-y-10 sm:space-y-12">
+						{/* 1 — Skin type */}
+						<section>
+							<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
+								How does your skin usually react to sun
+								exposure?
+							</h2>
+							<p className="mt-2 text-sm text-muted-foreground md:text-base">
+								Pick the option closest to your un-tanned skin
+								(e.g. inside of your arm).{" "}
+								<a
+									href="https://www.cancer.nsw.gov.au/prevention-and-screening/preventing-cancer/preventing-skin-cancer/reduce-your-skin-cancer-risk/identify-your-skin-type"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-muted-foreground/80 underline underline-offset-2 hover:text-foreground"
+									aria-label="Learn more about skin types"
+								>
+									Learn more
+								</a>
+							</p>
+							<div className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-3 md:mt-6 lg:grid-cols-3 lg:gap-4">
+								{SKIN_TYPES.map((skin) => (
+									<button
+										key={skin.id}
+										type="button"
+										onClick={() => setSkinTypeId(skin.id)}
+										className={cn(
+											"flex min-h-[72px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-all sm:min-h-0 sm:py-3",
+											skinTypeId === skin.id
+												? "border-accent bg-accent/10"
+												: "border-border bg-card hover:border-muted-foreground/40",
+										)}
+									>
+										<div
+											className="size-10 shrink-0 rounded-lg border border-border shadow-inner sm:size-9"
+											style={{
+												backgroundColor: skin.color,
+											}}
+											aria-hidden
+										/>
+										<div className="min-w-0 flex-1">
+											<p className="text-sm font-medium text-foreground">
+												{skin.label}
+											</p>
+											<p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground sm:truncate">
+												{skin.description}
+											</p>
+										</div>
+									</button>
+								))}
+							</div>
+						</section>
+
+						{/* 2 — Location */}
+						<section>
+							<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
+								Which area of Victoria do you spend most time
+								in?
+							</h2>
+							<p className="mt-2 text-sm text-muted-foreground md:text-base">
+								We&apos;ll use this to show UV for your area.
+							</p>
+							<div className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-3 md:mt-6 lg:grid-cols-3 lg:gap-4">
+								{AUSTRALIAN_LOCATIONS.map((loc) => (
+									<button
+										key={loc.id}
+										type="button"
+										onClick={() => setLocationId(loc.id)}
+										className={cn(
+											"flex min-h-[56px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-all sm:min-h-0",
+											locationId === loc.id
+												? "border-accent bg-accent/10"
+												: "border-border bg-card hover:border-muted-foreground/40",
+										)}
+									>
+										<MapPin className="size-5 shrink-0 text-muted-foreground sm:size-4" />
+										<div className="min-w-0">
+											<span className="block text-sm font-medium text-foreground">
+												{loc.label}
+											</span>
+											<span className="text-xs text-muted-foreground">
+												{loc.region}
+											</span>
+										</div>
+									</button>
+								))}
+							</div>
+						</section>
+
+						{/* 3 — Activities */}
+						<section>
+							<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
+								What brings you outside most often?
+							</h2>
+							<p className="mt-2 text-sm text-muted-foreground md:text-base">
+								Pick all that apply.
+							</p>
+							<div className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-3 md:mt-6 lg:grid-cols-3 lg:gap-4">
+								{OUTDOOR_ACTIVITIES.map((act) => (
+									<button
+										key={act.id}
+										type="button"
+										onClick={() => toggleActivity(act.id)}
+										className={cn(
+											"flex min-h-[56px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-all sm:min-h-0",
+											activityIds.includes(act.id)
+												? "border-accent bg-accent/10"
+												: "border-border bg-card hover:border-muted-foreground/40",
+										)}
+										aria-pressed={activityIds.includes(
+											act.id,
+										)}
+									>
+										<span
+											className="text-xl sm:text-lg"
+											aria-hidden
 										>
-											Learn more
-										</a>
-									</p>
-								</div>
-								{showOptions && (
-									<div className="mt-6 grid animate-quiz-options gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-3 lg:gap-4">
-										{SKIN_TYPES.map((skin) => (
-											<button
-												key={skin.id}
-												type="button"
-												onClick={() =>
-													setSkinTypeId(skin.id)
-												}
-												className={cn(
-													"flex min-h-[72px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-all sm:min-h-0 sm:py-3",
-													skinTypeId === skin.id
-														? "border-accent bg-accent/10"
-														: "border-border bg-card hover:border-muted-foreground/40",
-												)}
-											>
-												<div
-													className="size-10 shrink-0 rounded-lg border border-border shadow-inner sm:size-9"
-													style={{
-														backgroundColor:
-															skin.color,
-													}}
-													aria-hidden
-												/>
-												<div className="min-w-0 flex-1">
-													<p className="text-sm font-medium text-foreground">
-														{skin.label}
-													</p>
-													<p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground sm:truncate">
-														{skin.description}
-													</p>
-												</div>
-											</button>
-										))}
-									</div>
-								)}
-							</>
-						)}
+											{act.icon}
+										</span>
+										<span className="text-sm font-medium text-foreground">
+											{act.label}
+										</span>
+									</button>
+								))}
+							</div>
+						</section>
 
-						{/* Step 1 — Location */}
-						{step === 1 && (
-							<>
-								<div className="animate-quiz-question">
-									<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
-										Which area of Victoria do you spend most
-										time in?
-									</h1>
-									<p className="mt-2 text-sm text-muted-foreground sm:mt-2.5 md:text-base">
-										We&apos;ll use this to show UV for your
-										area.
-									</p>
-								</div>
-								{showOptions && (
-									<div className="mt-6 grid animate-quiz-options gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-3 lg:gap-4">
-										{AUSTRALIAN_LOCATIONS.map((loc) => (
-											<button
-												key={loc.id}
-												type="button"
-												onClick={() =>
-													setLocationId(loc.id)
-												}
-												className={cn(
-													"flex min-h-[56px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-all sm:min-h-0",
-													locationId === loc.id
-														? "border-accent bg-accent/10"
-														: "border-border bg-card hover:border-muted-foreground/40",
-												)}
-											>
-												<MapPin className="size-5 shrink-0 text-muted-foreground sm:size-4" />
-												<div className="min-w-0">
-													<span className="block text-sm font-medium text-foreground">
-														{loc.label}
-													</span>
-													<span className="text-xs text-muted-foreground">
-														{loc.region}
-													</span>
-												</div>
-											</button>
-										))}
-									</div>
-								)}
-							</>
-						)}
+						{/* 4 — Burn history */}
+						<section>
+							<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
+								Have you ever had a bad sunburn — red, peeling,
+								or blistered?
+							</h2>
+							<div className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-3 md:mt-6 lg:grid-cols-4 lg:gap-4">
+								{BURN_HISTORY_OPTIONS.map((opt) => (
+									<OptionBtn
+										key={opt.id}
+										selected={burnHistory === opt.id}
+										onClick={() => setBurnHistory(opt.id)}
+									>
+										<span
+											className="text-xl sm:text-lg"
+											aria-hidden
+										>
+											{opt.icon}
+										</span>
+										<span className="text-sm font-medium">
+											{opt.label}
+										</span>
+									</OptionBtn>
+								))}
+							</div>
+						</section>
 
-						{/* Step 2 — Activities */}
-						{step === 2 && (
-							<>
-								<div className="animate-quiz-question">
-									<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
-										What brings you outside most often?
-									</h1>
-									<p className="mt-2 text-sm text-muted-foreground sm:mt-2.5 md:text-base">
-										Pick all that apply.
-									</p>
-								</div>
-								{showOptions && (
-									<div className="mt-6 grid animate-quiz-options gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-3 lg:gap-4">
-										{OUTDOOR_ACTIVITIES.map((act) => (
-											<button
-												key={act.id}
-												type="button"
-												onClick={() =>
-													toggleActivity(act.id)
-												}
-												className={cn(
-													"flex min-h-[56px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-all sm:min-h-0",
-													activityIds.includes(act.id)
-														? "border-accent bg-accent/10"
-														: "border-border bg-card hover:border-muted-foreground/40",
-												)}
-												aria-pressed={activityIds.includes(
-													act.id,
-												)}
-											>
-												<span
-													className="text-xl sm:text-lg"
-													aria-hidden
-												>
-													{act.icon}
-												</span>
-												<span className="text-sm font-medium text-foreground">
-													{act.label}
-												</span>
-											</button>
-										))}
-									</div>
-								)}
-							</>
-						)}
+						{/* 5 — Work pattern */}
+						<section>
+							<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
+								How much of your typical weekday is spent
+								outdoors?
+							</h2>
+							<div className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-3 md:mt-6 lg:grid-cols-4 lg:gap-4">
+								{WORK_PATTERN_OPTIONS.map((opt) => (
+									<OptionBtn
+										key={opt.id}
+										selected={workPattern === opt.id}
+										onClick={() => setWorkPattern(opt.id)}
+									>
+										<span
+											className="text-xl sm:text-lg"
+											aria-hidden
+										>
+											{opt.icon}
+										</span>
+										<span className="text-sm font-medium">
+											{opt.label}
+										</span>
+									</OptionBtn>
+								))}
+							</div>
+						</section>
 
-						{/* Step 3 — Burn history */}
-						{step === 3 && (
-							<>
-								<div className="animate-quiz-question">
-									<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
-										Have you ever had a bad sunburn — red,
-										peeling, or blistered?
-									</h1>
-								</div>
-								{showOptions && (
-									<div className="mt-6 grid animate-quiz-options gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-4 lg:gap-4">
-										{BURN_HISTORY_OPTIONS.map((opt) => (
-											<OptionBtn
-												key={opt.id}
-												selected={
-													burnHistory === opt.id
-												}
-												onClick={() =>
-													setBurnHistory(opt.id)
-												}
-											>
-												<span
-													className="text-xl sm:text-lg"
-													aria-hidden
-												>
-													{opt.icon}
-												</span>
-												<span className="text-sm font-medium">
-													{opt.label}
-												</span>
-											</OptionBtn>
-										))}
-									</div>
-								)}
-							</>
-						)}
+						{/* 6 — Peak sun */}
+						<section>
+							<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
+								When are you usually outside during the day?
+							</h2>
+							<p className="mt-2 text-sm text-muted-foreground">
+								Midday (10am–2pm) is the high-risk window —
+								we&apos;ll flag it in your report.
+							</p>
+							<div className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-3 md:mt-6 lg:grid-cols-3 lg:gap-4">
+								{PEAK_SUN_OPTIONS.map((opt) => (
+									<OptionBtn
+										key={opt.id}
+										selected={peakSun === opt.id}
+										onClick={() => setPeakSun(opt.id)}
+									>
+										<span
+											className="text-xl sm:text-lg"
+											aria-hidden
+										>
+											{opt.icon}
+										</span>
+										<span className="text-sm font-medium">
+											{opt.label}
+										</span>
+									</OptionBtn>
+								))}
+							</div>
+						</section>
 
-						{/* Step 4 — Work pattern */}
-						{step === 4 && (
-							<>
-								<div className="animate-quiz-question">
-									<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
-										How much of your typical weekday is
-										spent outdoors?
-									</h1>
-								</div>
-								{showOptions && (
-									<div className="mt-6 grid animate-quiz-options gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-4 lg:gap-4">
-										{WORK_PATTERN_OPTIONS.map((opt) => (
-											<OptionBtn
-												key={opt.id}
-												selected={
-													workPattern === opt.id
-												}
-												onClick={() =>
-													setWorkPattern(opt.id)
-												}
-											>
-												<span
-													className="text-xl sm:text-lg"
-													aria-hidden
-												>
-													{opt.icon}
-												</span>
-												<span className="text-sm font-medium">
-													{opt.label}
-												</span>
-											</OptionBtn>
-										))}
-									</div>
-								)}
-							</>
-						)}
+						{/* 7 — Sunscreen frequency */}
+						<section>
+							<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
+								How often do you apply sunscreen before going
+								outside?
+							</h2>
+							<div className="mt-4 grid gap-3 sm:grid-cols-1 md:grid-cols-2 md:gap-4">
+								{SUNSCREEN_FREQ_OPTIONS.map((opt) => (
+									<OptionBtn
+										key={opt.id}
+										selected={sunscreenFreq === opt.id}
+										onClick={() => setSunscreenFreq(opt.id)}
+									>
+										<span className="text-sm font-medium">
+											{opt.label}
+										</span>
+									</OptionBtn>
+								))}
+							</div>
+						</section>
 
-						{/* Step 5 — Peak sun */}
-						{step === 5 && (
-							<>
-								<div className="animate-quiz-question">
-									<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
-										When are you usually outside during the
-										day?
-									</h1>
-									<p className="mt-2 text-sm text-muted-foreground">
-										Midday (10am–2pm) is the high-risk
-										window — we&apos;ll flag it in your
-										report.
-									</p>
-								</div>
-								{showOptions && (
-									<div className="mt-6 grid animate-quiz-options gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-3 lg:gap-4">
-										{PEAK_SUN_OPTIONS.map((opt) => (
-											<OptionBtn
-												key={opt.id}
-												selected={peakSun === opt.id}
-												onClick={() =>
-													setPeakSun(opt.id)
-												}
-											>
-												<span
-													className="text-xl sm:text-lg"
-													aria-hidden
-												>
-													{opt.icon}
-												</span>
-												<span className="text-sm font-medium">
-													{opt.label}
-												</span>
-											</OptionBtn>
-										))}
-									</div>
-								)}
-							</>
-						)}
-
-						{/* Step 6 — Sunscreen frequency */}
-						{step === 6 && (
-							<>
-								<div className="animate-quiz-question">
-									<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
-										How often do you apply sunscreen before
-										going outside?
-									</h1>
-								</div>
-								{showOptions && (
-									<div className="mt-6 grid animate-quiz-options gap-3 sm:grid-cols-1 sm:gap-3 md:grid-cols-2 md:mt-8 md:gap-4">
-										{SUNSCREEN_FREQ_OPTIONS.map((opt) => (
-											<OptionBtn
-												key={opt.id}
-												selected={
-													sunscreenFreq === opt.id
-												}
-												onClick={() =>
-													setSunscreenFreq(opt.id)
-												}
-											>
-												<span className="text-sm font-medium">
-													{opt.label}
-												</span>
-											</OptionBtn>
-										))}
-									</div>
-								)}
-							</>
-						)}
-
-						{/* Step 7 — Protection habits */}
-						{step === 7 && (
-							<>
-								<div className="animate-quiz-question">
-									<h1 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl lg:text-3xl">
-										What do you usually do when you&apos;re
-										out in the sun?
-									</h1>
-									<p className="mt-2 text-sm text-muted-foreground">
-										Pick all that apply.
-									</p>
-								</div>
-								{showOptions && (
-									<div className="mt-6 grid animate-quiz-options gap-3 sm:grid-cols-2 sm:gap-3 md:mt-8 lg:grid-cols-3 lg:gap-4">
-										{PROTECTION_HABIT_OPTIONS.map((opt) => (
-											<OptionBtn
-												key={opt.id}
-												selected={protectionHabits.includes(
-													opt.id,
-												)}
-												onClick={() =>
-													toggleHabit(opt.id)
-												}
-											>
-												<span
-													className="text-xl sm:text-lg"
-													aria-hidden
-												>
-													{opt.icon}
-												</span>
-												<span className="text-sm font-medium">
-													{opt.label}
-												</span>
-											</OptionBtn>
-										))}
-									</div>
-								)}
-							</>
-						)}
+						{/* 8 — Protection habits */}
+						<section>
+							<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
+								What do you usually do when you&apos;re out in
+								the sun?
+							</h2>
+							<p className="mt-2 text-sm text-muted-foreground">
+								Pick all that apply.
+							</p>
+							<div className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-3 md:mt-6 lg:grid-cols-3 lg:gap-4">
+								{PROTECTION_HABIT_OPTIONS.map((opt) => (
+									<OptionBtn
+										key={opt.id}
+										selected={protectionHabits.includes(
+											opt.id,
+										)}
+										onClick={() => toggleHabit(opt.id)}
+									>
+										<span
+											className="text-xl sm:text-lg"
+											aria-hidden
+										>
+											{opt.icon}
+										</span>
+										<span className="text-sm font-medium">
+											{opt.label}
+										</span>
+									</OptionBtn>
+								))}
+							</div>
+						</section>
 					</div>
 
-					<div className="mt-8 flex shrink-0 items-center justify-between gap-4 border-t border-border pt-6 sm:mt-10 sm:pt-8">
-						<Button
-							variant="ghost"
-							size="lg"
-							onClick={handleBack}
-							disabled={step === 0}
-							className="gap-2 min-w-0"
-						>
-							<ArrowLeft className="size-4 shrink-0" />
-							<span className="hidden sm:inline">Back</span>
-						</Button>
+					<div className="mt-10 border-t border-border pt-8 sm:mt-12 sm:pt-10">
 						<Button
 							size="lg"
-							onClick={handleNext}
-							disabled={!canNext}
-							className="ml-auto gap-2 min-w-0 sm:min-w-[120px]"
+							onClick={handleSubmit}
+							disabled={!canSubmit}
+							className="w-full gap-2 sm:w-auto sm:min-w-[180px]"
 						>
-							{step === TOTAL_STEPS - 1
-								? "See my profile"
-								: "Next"}
+							See my profile
 							<ArrowRight className="size-4 shrink-0" />
 						</Button>
 					</div>
