@@ -61,6 +61,16 @@ function formatHour(ts: number, timezone: string): string {
 	});
 }
 
+function formatDate(ts: number, timezone: string): string {
+	return new Date(ts * 1000).toLocaleDateString("en-AU", {
+		timeZone: timezone,
+		weekday: "long",
+		day: "numeric",
+		month: "long",
+		year: "numeric",
+	});
+}
+
 function Stat({
 	icon: Icon,
 	label,
@@ -181,9 +191,11 @@ export function WeatherView({
 					<h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
 						Weather & UV
 					</h1>
-					<p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+					<p className="mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-sm text-muted-foreground">
 						<Compass className="size-4" />
-						{city} · {timezone.replace("_", " ")}
+						<span>{city} · {timezone.replace("_", " ")}</span>
+						<span aria-hidden>·</span>
+						<span>{formatDate(current.dt, timezone)}</span>
 					</p>
 				</div>
 			</div>

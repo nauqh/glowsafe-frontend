@@ -95,7 +95,7 @@ export default function SkinProfilePage() {
 	if (insight) {
 		return (
 			<section
-				className="mx-auto w-full max-w-2xl text-left"
+				className="mx-auto w-full max-w-4xl text-left"
 				aria-label="Your detailed skin profile report"
 			>
 				<div className="space-y-3">

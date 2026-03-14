@@ -13,11 +13,15 @@ import {
 	PanelLeft,
 	X,
 	Sun,
+	Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
 
-const NAV_ITEMS = [
+import { fetchSkinProfileByEmail } from "@/lib/skin-profile-api";
+import type { SkinProfileByEmailResult } from "@/lib/skin-profile-api";
+
+const NAV_ITEMS_FULL = [
 	{ href: "/profile", label: "Overview", icon: User, exact: true },
 	{
 		href: "/profile/skin",
@@ -35,6 +39,28 @@ const NAV_ITEMS = [
 		href: "/profile/habits",
 		label: "Sun Habits",
 		icon: ShieldCheck,
+		exact: false,
+	},
+	{
+		href: "/profile/account",
+		label: "Account",
+		icon: Settings,
+		exact: false,
+	},
+] as const;
+
+/** Shown when user has not completed the quiz yet */
+const NAV_ITEMS_NO_PROFILE = [
+	{
+		href: "/profile/build",
+		label: "Build your profile",
+		icon: Sparkles,
+		exact: false,
+	},
+	{
+		href: "/profile/weather",
+		label: "Weather & UV",
+		icon: Sun,
 		exact: false,
 	},
 	{
@@ -71,12 +97,36 @@ export default function ProfileLayout({
 	const { isOpen, toggle } = useSidebarState();
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const [isSigningOut, setIsSigningOut] = useState(false);
+	const [hasSkinProfile, setHasSkinProfile] = useState<boolean | null>(null);
 
 	useEffect(() => {
 		if (!isPending && !session?.user) {
 			router.replace("/");
 		}
 	}, [isPending, session, router]);
+
+	// Determine if user has completed the quiz (has skin profile)
+	useEffect(() => {
+		const email = session?.user?.email;
+		if (!email) {
+			setHasSkinProfile(false);
+			return;
+		}
+		let cancelled = false;
+		fetchSkinProfileByEmail(email)
+			.then((data: SkinProfileByEmailResult | null) => {
+				if (!cancelled) setHasSkinProfile(!!data);
+			})
+			.catch(() => {
+				if (!cancelled) setHasSkinProfile(false);
+			});
+		return () => {
+			cancelled = true;
+		};
+	}, [session?.user?.email]);
+
+	const navItems =
+		hasSkinProfile === true ? NAV_ITEMS_FULL : NAV_ITEMS_NO_PROFILE;
 
 	useEffect(() => {
 		setMobileOpen(false);
@@ -190,7 +240,7 @@ export default function ProfileLayout({
 
 							{/* Nav links */}
 							<nav className="flex flex-col gap-0.5 py-3 pl-0 pr-3">
-								{NAV_ITEMS.map((item) => {
+								{navItems.map((item) => {
 									const isActive = item.exact
 										? pathname === item.href
 										: pathname.startsWith(item.href);
@@ -310,7 +360,7 @@ export default function ProfileLayout({
 										)}
 									</div>
 									<nav className="flex flex-col gap-0.5 py-3 pl-0 pr-3">
-										{NAV_ITEMS.map((item) => {
+										{navItems.map((item) => {
 											const isActive = item.exact
 												? pathname === item.href
 												: pathname.startsWith(
@@ -382,7 +432,7 @@ export default function ProfileLayout({
 
 				{/* Main content */}
 				<main className="flex-1 overflow-y-auto overflow-x-hidden">
-					<div className="mx-auto max-w-3xl px-5 py-8 md:px-10 md:py-12">
+					<div className="mx-auto max-w-5xl px-5 py-8 md:px-10 md:py-12">
 						{children}
 					</div>
 				</main>
