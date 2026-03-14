@@ -67,6 +67,7 @@ export default function Home() {
 					<div className="hidden items-center justify-between px-12 md:flex">
 						<nav className="flex items-center gap-10">
 							<NavLink href="/skin-builder">Skin Builder</NavLink>
+							<NavLink href="/weather">Weather & UV</NavLink>
 							<NavLink href="#how-it-works">About us</NavLink>
 							<NavLink href="#why">Why GlowSafe</NavLink>
 							<NavLink href="#early-access">
@@ -313,6 +314,12 @@ export default function Home() {
 										className="transition-colors hover:text-foreground"
 									>
 										Skin Builder
+									</Link>
+									<Link
+										href="/weather"
+										className="transition-colors hover:text-foreground"
+									>
+										Weather & UV
 									</Link>
 									<Link
 										href="#how-it-works"

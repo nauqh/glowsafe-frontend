@@ -12,6 +12,7 @@ import {
 	LogOut,
 	PanelLeft,
 	X,
+	Sun,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
@@ -22,6 +23,12 @@ const NAV_ITEMS = [
 		href: "/profile/skin",
 		label: "Skin Profile",
 		icon: Droplets,
+		exact: false,
+	},
+	{
+		href: "/profile/weather",
+		label: "Weather & UV",
+		icon: Sun,
 		exact: false,
 	},
 	{

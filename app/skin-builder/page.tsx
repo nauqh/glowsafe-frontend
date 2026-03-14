@@ -220,7 +220,10 @@ export default function SkinBuilderPage() {
 						}),
 					});
 				} catch (error) {
-					console.error("Failed to persist skin profile from quiz", error);
+					console.error(
+						"Failed to persist skin profile from quiz",
+						error,
+					);
 				}
 			}
 		} catch (error) {

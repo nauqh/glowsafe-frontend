@@ -91,9 +91,7 @@ export default function ProfileOverviewPage() {
 					PROFILE_INSIGHT_STORAGE_KEY,
 				);
 				if (rawInsight) {
-					const parsedInsight = JSON.parse(
-						rawInsight,
-					) as QuizInsight;
+					const parsedInsight = JSON.parse(rawInsight) as QuizInsight;
 					if (parsedInsight?.vibe && parsedInsight?.sections) {
 						setInsight(parsedInsight);
 					}
@@ -131,15 +129,18 @@ export default function ProfileOverviewPage() {
 
 		const persist = async () => {
 			try {
-				const res = await fetch(`${API_BASE_URL}/quiz/add-skin-profile`, {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						email,
-						quiz: profile,
-						analysis: insight,
-					}),
-				});
+				const res = await fetch(
+					`${API_BASE_URL}/quiz/add-skin-profile`,
+					{
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							email,
+							quiz: profile,
+							analysis: insight,
+						}),
+					},
+				);
 
 				if (!res.ok) {
 					console.error(
@@ -191,7 +192,8 @@ export default function ProfileOverviewPage() {
 						No profile yet
 					</h2>
 					<p className="mt-2 text-sm text-muted-foreground">
-						Take the quick quiz to build your personalised UV risk profile.
+						Take the quick quiz to build your personalised UV risk
+						profile.
 					</p>
 					<div className="mt-6">
 						<Link
@@ -212,7 +214,9 @@ export default function ProfileOverviewPage() {
 
 	const firstName = session?.user?.name?.split(" ")[0] ?? "";
 	const skinType = SKIN_TYPES.find((s) => s.id === profile.skinTypeId);
-	const location = AUSTRALIAN_LOCATIONS.find((l) => l.id === profile.locationId);
+	const location = AUSTRALIAN_LOCATIONS.find(
+		(l) => l.id === profile.locationId,
+	);
 	const activityLabels = profile.activityIds
 		.map((id) => OUTDOOR_ACTIVITIES.find((a) => a.id === id)?.label ?? id)
 		.join(", ");
@@ -289,7 +293,11 @@ export default function ProfileOverviewPage() {
 					<ArrowRight className="size-4" />
 				</Link>
 				<Link href="/profile/skin" className="cursor-pointer">
-					<Button variant="outline" size="lg" className="gap-2 cursor-pointer">
+					<Button
+						variant="outline"
+						size="lg"
+						className="gap-2 cursor-pointer"
+					>
 						<Pencil className="size-3.5" />
 						Edit profile
 					</Button>
