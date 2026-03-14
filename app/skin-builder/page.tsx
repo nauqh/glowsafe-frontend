@@ -461,6 +461,39 @@ export default function SkinBuilderPage() {
 
 			<main className="flex min-h-0 flex-1 flex-col overflow-y-auto">
 				<div className="mx-auto w-full max-w-3xl flex-1 px-4 py-6 sm:px-6 sm:py-8 md:py-10">
+					{/* Quiz introduction */}
+					<header className="mb-8 sm:mb-10">
+						<p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+							Sun profile quiz
+						</p>
+						<h1 className="mt-2 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+							Build your sun profile
+						</h1>
+						<p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-foreground/90 sm:text-base">
+							We’ll ask about your skin type, location, and how
+							you spend time in the sun. Your answers power
+							personalised UV advice and tips. No lectures, just
+							what you need to stay sun-smart.
+						</p>
+						<dl className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted-foreground sm:gap-x-8">
+							<div className="flex items-center gap-2">
+								<span className="text-accent" aria-hidden>
+									•
+								</span>
+								<dt className="sr-only">Time</dt>
+								<dd>About 2 minutes</dd>
+							</div>
+							<div className="flex items-center gap-2">
+								<span className="text-accent" aria-hidden>
+									•
+								</span>
+								<dt className="sr-only">Privacy</dt>
+								<dd>
+									Private, used only to tailor your experience
+								</dd>
+							</div>
+						</dl>
+					</header>
 					<div className="space-y-6 sm:space-y-8">
 						{/* 1 — Skin type */}
 						<section
@@ -491,6 +524,17 @@ export default function SkinBuilderPage() {
 									Learn more
 								</a>
 							</p>
+							<div className="mt-4 flex flex-col items-center">
+								<div className="aspect-video w-full max-w-lg overflow-hidden rounded-xl border border-border bg-muted/20">
+									<iframe
+										title="Understanding skin types — Fitzpatrick scale"
+										src="https://www.youtube.com/embed/HZ_LU9GtP1A?rel=0"
+										allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share"
+										allowFullScreen
+										className="h-full w-full"
+									/>
+								</div>
+							</div>
 							<div className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-3 md:mt-6 lg:grid-cols-3 lg:gap-4">
 								{SKIN_TYPES.map((skin) => (
 									<button
@@ -500,7 +544,7 @@ export default function SkinBuilderPage() {
 											handleSkinTypeSelect(skin.id)
 										}
 										className={cn(
-											"flex min-h-[72px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-all sm:min-h-0 sm:py-3",
+											"group/card relative flex min-h-[72px] items-center gap-3 overflow-hidden rounded-xl border-2 px-4 py-3 text-left transition-all sm:min-h-0 sm:py-3",
 											skinTypeId === skin.id
 												? "border-accent bg-accent/10"
 												: "border-border bg-card hover:border-muted-foreground/40",
@@ -518,6 +562,15 @@ export default function SkinBuilderPage() {
 												{skin.label}
 											</p>
 											<p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground sm:truncate">
+												{skin.description}
+											</p>
+										</div>
+										{/* Hover overlay with full description */}
+										<div
+											className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-xl bg-background/95 px-4 py-3 opacity-0 transition-opacity duration-200 group-hover/card:opacity-100"
+											aria-hidden
+										>
+											<p className="text-center text-sm text-foreground">
 												{skin.description}
 											</p>
 										</div>
