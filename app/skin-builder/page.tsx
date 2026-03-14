@@ -502,8 +502,8 @@ export default function SkinBuilderPage() {
 							}}
 							className="rounded-3xl border border-border/60 bg-muted/10 px-4 py-5 sm:px-5 sm:py-6"
 						>
-							<div className="flex items-baseline gap-2">
-								<span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
+							<div className="flex items-center gap-2">
+								<span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
 									1
 								</span>
 								<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
@@ -586,8 +586,8 @@ export default function SkinBuilderPage() {
 							}}
 							className="rounded-3xl border border-border/60 bg-muted/10 px-4 py-5 sm:px-5 sm:py-6"
 						>
-							<div className="flex items-baseline gap-2">
-								<span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
+							<div className="flex items-center gap-2">
+								<span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
 									2
 								</span>
 								<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
@@ -634,8 +634,8 @@ export default function SkinBuilderPage() {
 							}}
 							className="rounded-3xl border border-border/60 bg-muted/10 px-4 py-5 sm:px-5 sm:py-6"
 						>
-							<div className="flex items-baseline gap-2">
-								<span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
+							<div className="flex items-center gap-2">
+								<span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
 									3
 								</span>
 								<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
@@ -676,8 +676,8 @@ export default function SkinBuilderPage() {
 							}}
 							className="rounded-3xl border border-border/60 bg-muted/10 px-4 py-5 sm:px-5 sm:py-6"
 						>
-							<div className="flex items-baseline gap-2">
-								<span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
+							<div className="flex items-center gap-2">
+								<span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
 									4
 								</span>
 								<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
@@ -715,8 +715,8 @@ export default function SkinBuilderPage() {
 							}}
 							className="rounded-3xl border border-border/60 bg-muted/10 px-4 py-5 sm:px-5 sm:py-6"
 						>
-							<div className="flex items-baseline gap-2">
-								<span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
+							<div className="flex items-center gap-2">
+								<span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
 									5
 								</span>
 								<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
@@ -754,8 +754,8 @@ export default function SkinBuilderPage() {
 							}}
 							className="rounded-3xl border border-border/60 bg-muted/10 px-4 py-5 sm:px-5 sm:py-6"
 						>
-							<div className="flex items-baseline gap-2">
-								<span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
+							<div className="flex items-center gap-2">
+								<span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
 									6
 								</span>
 								<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
@@ -796,8 +796,8 @@ export default function SkinBuilderPage() {
 							}}
 							className="rounded-3xl border border-border/60 bg-muted/10 px-4 py-5 sm:px-5 sm:py-6"
 						>
-							<div className="flex items-baseline gap-2">
-								<span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
+							<div className="flex items-center gap-2">
+								<span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
 									7
 								</span>
 								<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
@@ -829,8 +829,8 @@ export default function SkinBuilderPage() {
 							}}
 							className="rounded-3xl border border-border/60 bg-muted/10 px-4 py-5 sm:px-5 sm:py-6"
 						>
-							<div className="flex items-baseline gap-2">
-								<span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
+							<div className="flex items-center gap-2">
+								<span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
 									8
 								</span>
 								<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
