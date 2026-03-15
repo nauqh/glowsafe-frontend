@@ -1,9 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Search, Menu } from "lucide-react";
 import { SiInstagram, SiTiktok } from "react-icons/si";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { HomeNavAccountLinks } from "@/components/landing/home-nav-account";
-import Image from "next/image";
 
 function NavLink({
 	href,
@@ -125,7 +125,7 @@ export default function Home() {
 						</p>
 						<div className="mt-7 flex w-full flex-col gap-3 sm:mt-9 md:flex-row md:justify-center md:gap-4">
 							<Link
-								href="/skin-builder"
+								href="/build"
 								className="group flex min-h-14 flex-1 items-center justify-center gap-3 border border-white py-4 text-base tracking-wide text-white font-semibold transition-all duration-300 hover:border-secondary hover:bg-secondary hover:text-foreground md:min-h-0 md:w-auto md:flex-initial md:py-3.5 md:px-8 md:text-sm"
 							>
 								Build your profile
