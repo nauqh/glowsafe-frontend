@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Sparkles, Droplets, MapPin, Sun, ShieldCheck } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, Sparkles, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { sunsafeIcons } from "@/lib/sunsafe-icons";
 
 export default function ProfileBuildPage() {
 	return (
@@ -15,7 +17,9 @@ export default function ProfileBuildPage() {
 				Build your sun profile
 			</h1>
 			<p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-foreground/90 sm:text-base">
-				Your profile powers personalised UV advice and sun-safety tips. We’ll ask a few short questions so we can tailor everything to you—no lectures, just what you need.
+				Your profile powers personalised UV advice and sun-safety tips.
+				We’ll ask a few short questions so we can tailor everything to
+				you—no lectures, just what you need.
 			</p>
 
 			<div className="mt-8 rounded-2xl border border-border bg-muted/20 px-5 py-6 sm:px-6 sm:py-7">
@@ -24,13 +28,22 @@ export default function ProfileBuildPage() {
 				</h2>
 				<ul className="mt-4 space-y-4">
 					<li className="flex items-start gap-3">
-						<span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-background text-muted-foreground">
-							<Droplets className="size-4" />
+						<span className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-background">
+							<Image
+								src={sunsafeIcons.handUvProtection}
+								alt=""
+								width={28}
+								height={28}
+								className="object-contain"
+							/>
 						</span>
 						<div>
-							<p className="font-medium text-foreground">Skin type</p>
+							<p className="font-medium text-foreground">
+								Skin type
+							</p>
 							<p className="mt-0.5 text-sm text-muted-foreground">
-								How your skin reacts to the sun (Fitzpatrick scale). We use this to gauge your UV risk.
+								How your skin reacts to the sun (Fitzpatrick
+								scale). We use this to gauge your UV risk.
 							</p>
 						</div>
 					</li>
@@ -39,31 +52,53 @@ export default function ProfileBuildPage() {
 							<MapPin className="size-4" />
 						</span>
 						<div>
-							<p className="font-medium text-foreground">Location</p>
+							<p className="font-medium text-foreground">
+								Location
+							</p>
 							<p className="mt-0.5 text-sm text-muted-foreground">
-								Where you spend most of your time in Victoria. We’ll show UV and advice for your area.
+								Where you spend most of your time in Victoria.
+								We’ll show UV and advice for your area.
 							</p>
 						</div>
 					</li>
 					<li className="flex items-start gap-3">
-						<span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-background text-muted-foreground">
-							<Sun className="size-4" />
+						<span className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-background">
+							<Image
+								src={sunsafeIcons.peopleSun}
+								alt=""
+								width={28}
+								height={28}
+								className="object-contain"
+							/>
 						</span>
 						<div>
-							<p className="font-medium text-foreground">Activities & habits</p>
+							<p className="font-medium text-foreground">
+								Activities & habits
+							</p>
 							<p className="mt-0.5 text-sm text-muted-foreground">
-								What brings you outside and how you protect your skin. This shapes your recommendations.
+								What brings you outside and how you protect your
+								skin. This shapes your recommendations.
 							</p>
 						</div>
 					</li>
 					<li className="flex items-start gap-3">
-						<span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-background text-muted-foreground">
-							<ShieldCheck className="size-4" />
+						<span className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-background">
+							<Image
+								src={sunsafeIcons.uvShieldCheck}
+								alt=""
+								width={28}
+								height={28}
+								className="object-contain"
+							/>
 						</span>
 						<div>
-							<p className="font-medium text-foreground">Your sun-smart plan</p>
+							<p className="font-medium text-foreground">
+								Your sun-smart plan
+							</p>
 							<p className="mt-0.5 text-sm text-muted-foreground">
-								At the end you’ll get a short, personalised summary and tips. You can always update this later.
+								At the end you’ll get a short, personalised
+								summary and tips. You can always update this
+								later.
 							</p>
 						</div>
 					</li>

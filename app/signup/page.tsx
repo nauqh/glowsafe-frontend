@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, type FormEvent } from "react";
+import { Suspense, useEffect, useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { Signup01 } from "@/components/auth/signup-01";
@@ -9,6 +9,12 @@ function SignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackURL = searchParams.get("callbackUrl") ?? "/profile";
+  const { data: session, isPending } = authClient.useSession();
+
+  useEffect(() => {
+    if (isPending) return;
+    if (session) router.replace(callbackURL);
+  }, [session, isPending, router, callbackURL]);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -36,6 +42,8 @@ function SignupForm() {
 
     router.push(callbackURL);
   }
+
+  if (session) return null;
 
   return (
     <Signup01

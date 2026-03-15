@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Search, Menu } from "lucide-react";
 import { SiInstagram, SiTiktok } from "react-icons/si";
 import { HowItWorks } from "@/components/landing/how-it-works";
+import { HomeNavAccountLinks } from "@/components/landing/home-nav-account";
 import Image from "next/image";
 
 function NavLink({
@@ -57,10 +58,7 @@ export default function Home() {
 						>
 							GlowSafe
 						</Link>
-						<div className="flex items-center justify-end gap-6">
-							<NavLink href="/signup">Email sign up</NavLink>
-							<NavLink href="/login">My Account</NavLink>
-						</div>
+						<HomeNavAccountLinks />
 					</div>
 
 					{/* Bottom row: nav links centred, search pinned right */}
@@ -291,11 +289,7 @@ export default function Home() {
 									Find us
 								</p>
 								<p className="mt-4 normal-case leading-relaxed text-muted-foreground">
-									Melbourne, VIC
-									<br />
-									6 Example St
-									<br />
-									Melbourne VIC 3000
+									Victoria, Australia
 								</p>
 							</div>
 							<div>

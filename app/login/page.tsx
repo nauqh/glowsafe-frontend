@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, type FormEvent } from "react";
+import { Suspense, useEffect, useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { Login01 } from "@/components/auth/login-01";
@@ -9,6 +9,15 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackURL = searchParams.get("callbackUrl") ?? "/profile";
+  const { data: session, isPending } = authClient.useSession();
+
+  // If already logged in, go to profile (or callbackUrl)
+  useEffect(() => {
+    if (isPending) return;
+    if (session) {
+      router.replace(callbackURL);
+    }
+  }, [session, isPending, router, callbackURL]);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,6 +42,10 @@ function LoginForm() {
     }
 
     router.push(callbackURL);
+  }
+
+  if (session) {
+    return null; // Redirecting to profile
   }
 
   return (
