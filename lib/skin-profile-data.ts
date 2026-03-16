@@ -40,17 +40,58 @@ export const SKIN_TYPES = [
 	},
 ] as const;
 
-// Victoria regions — feeds into BOM API for UV data.
+// Victoria locations — focused on Melbourne suburbs + a regional catch-all.
 export const AUSTRALIAN_LOCATIONS = [
-	{ id: "melbourne-metro", label: "Melbourne Metro", region: "Victoria" },
-	{ id: "mornington-peninsula", label: "Mornington Peninsula", region: "Victoria" },
-	{ id: "geelong", label: "Geelong", region: "Victoria" },
-	{ id: "ballarat", label: "Ballarat", region: "Victoria" },
-	{ id: "bendigo", label: "Bendigo", region: "Victoria" },
-	{ id: "gippsland", label: "Gippsland", region: "Victoria" },
-	{ id: "hume", label: "Hume (Albury–Wodonga, etc.)", region: "Victoria" },
-	{ id: "barwon-south-west", label: "Barwon & South West", region: "Victoria" },
-	{ id: "loddon-mallee", label: "Loddon Mallee", region: "Victoria" },
+	{
+		id: "melbourne-cbd",
+		label: "Melbourne CBD",
+		region: "Inner Melbourne",
+	},
+	{
+		id: "carlton-fitzroy",
+		label: "Carlton / Fitzroy",
+		region: "Inner North",
+	},
+	{
+		id: "richmond-abbotsford",
+		label: "Richmond / Abbotsford",
+		region: "Inner East",
+	},
+	{
+		id: "st-kilda-elwood",
+		label: "St Kilda / Elwood",
+		region: "Bayside",
+	},
+	{
+		id: "brunswick-coburg",
+		label: "Brunswick / Coburg",
+		region: "Inner North",
+	},
+	{
+		id: "footscray-yarraville",
+		label: "Footscray / Yarraville",
+		region: "Inner West",
+	},
+	{
+		id: "werribee-point-cook",
+		label: "Werribee / Point Cook",
+		region: "Outer South West",
+	},
+	{
+		id: "dandenong-springvale",
+		label: "Dandenong / Springvale",
+		region: "South East",
+	},
+	{
+		id: "frankston-seaford",
+		label: "Frankston / Seaford",
+		region: "Bayside / Peninsula",
+	},
+	{
+		id: "regional-victoria",
+		label: "Regional Victoria",
+		region: "Outside greater Melbourne",
+	},
 ] as const;
 
 export const OUTDOOR_ACTIVITIES = [

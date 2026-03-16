@@ -62,6 +62,126 @@ const cache = new Map<
 	{ data: WeatherCurrentResponse; timestamp: number }
 >();
 
+// Melbourne-focused suburb list used for weather lookups.
+// Not exhaustive, but covers City Loop, Pakenham line, and major surrounding suburbs.
+export type MelbourneSuburbGroup = {
+	label: string;
+	options: string[];
+};
+
+export const MELBOURNE_SUBURB_GROUPS: MelbourneSuburbGroup[] = [
+	{
+		label: "— City & inner city —",
+		options: [
+			"Docklands",
+			"East Melbourne",
+			"Melbourne",
+			"North Melbourne",
+			"Port Melbourne",
+			"Southbank",
+			"West Melbourne",
+		],
+	},
+	{
+		label: "— Inner north / west / east —",
+		options: [
+			"Abbotsford",
+			"Balwyn",
+			"Brunswick",
+			"Brunswick East",
+			"Camberwell",
+			"Carlton",
+			"Coburg",
+			"Essendon",
+			"Flemington",
+			"Footscray",
+			"Hawthorn",
+			"Kensington",
+			"Kew",
+			"Moonee Ponds",
+			"Pascoe Vale",
+			"Preston",
+			"Seddon",
+			"Sunshine",
+			"Thornbury",
+			"Yarraville",
+		],
+	},
+	{
+		label: "— Chapel St & bayside —",
+		options: [
+			"Elwood",
+			"Prahran",
+			"South Yarra",
+			"St Kilda",
+			"Windsor",
+		],
+	},
+	{
+		label: "— Pakenham line corridor —",
+		options: [
+			"Armadale",
+			"Beaconsfield",
+			"Berwick",
+			"Carnegie",
+			"Caulfield",
+			"Clayton",
+			"Dandenong",
+			"Hallam",
+			"Hughesdale",
+			"Huntingdale",
+			"Malvern",
+			"Murrumbeena",
+			"Narre Warren",
+			"Noble Park",
+			"Oakleigh",
+			"Officer",
+			"Pakenham",
+			"Springvale",
+			"Toorak",
+			"Westall",
+		],
+	},
+	{
+		label: "— Bayside & peninsula —",
+		options: [
+			"Aspendale",
+			"Beaumaris",
+			"Brighton",
+			"Carrum",
+			"Chelsea",
+			"Edithvale",
+			"Frankston",
+			"Hampton",
+			"Mentone",
+			"Mordialloc",
+			"Sandringham",
+			"Seaford",
+		],
+	},
+	{
+		label: "— Outer hubs & growth areas —",
+		options: [
+			"Box Hill",
+			"Craigieburn",
+			"Doncaster",
+			"Epping",
+			"Glen Waverley",
+			"Point Cook",
+			"Ringwood",
+			"South Morang",
+			"Tarneit",
+			"Truganina",
+			"Werribee",
+		],
+	},
+];
+
+// Flat list if a simple array is ever needed.
+export const MELBOURNE_SUBURBS: string[] = MELBOURNE_SUBURB_GROUPS.flatMap(
+	(group) => group.options,
+);
+
 export async function fetchWeatherCurrent(
 	city: string = "Melbourne",
 ): Promise<WeatherCurrentResponse> {

@@ -96,9 +96,11 @@ function Stat({
 export function WeatherView({
 	showBackLink = false,
 	city = "Melbourne",
+	locationControl,
 }: {
 	showBackLink?: boolean;
 	city?: string;
+	locationControl?: React.ReactNode;
 }) {
 	const [data, setData] = useState<WeatherCurrentResponse | null>(null);
 	const [loading, setLoading] = useState(true);
@@ -193,11 +195,18 @@ export function WeatherView({
 					</h1>
 					<p className="mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-sm text-muted-foreground">
 						<Compass className="size-4" />
-						<span>{city} · {timezone.replace("_", " ")}</span>
+						<span>
+							{city} · {timezone.replace("_", " ")}
+						</span>
 						<span aria-hidden>·</span>
 						<span>{formatDate(current.dt, timezone)}</span>
 					</p>
 				</div>
+				{locationControl ? (
+					<div className="w-full max-w-xs md:max-w-sm md:w-auto">
+						{locationControl}
+					</div>
+				) : null}
 			</div>
 
 			<section className="mt-8 rounded-2xl border border-border bg-card p-6 shadow-sm md:p-8">

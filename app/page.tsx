@@ -126,9 +126,16 @@ export default function Home() {
 						<div className="mt-7 flex w-full flex-col gap-3 sm:mt-9 md:flex-row md:justify-center md:gap-4">
 							<Link
 								href="/build"
-								className="group flex min-h-14 flex-1 items-center justify-center gap-3 border border-white py-4 text-base tracking-wide text-white font-semibold transition-all duration-300 hover:border-secondary hover:bg-secondary hover:text-foreground md:min-h-0 md:w-auto md:flex-initial md:py-3.5 md:px-8 md:text-sm"
+								className="group flex min-h-14 flex-1 items-center justify-center gap-3 border border-white py-4 text-base font-semibold tracking-wide text-white transition-all duration-300 hover:border-secondary hover:bg-secondary hover:text-foreground md:min-h-0 md:w-auto md:flex-initial md:py-3.5 md:px-8 md:text-sm"
 							>
 								Build your profile
+								<ArrowRight className="size-5 transition-transform group-hover:translate-x-1 md:size-4" />
+							</Link>
+							<Link
+								href="/weather"
+								className="group flex min-h-14 flex-1 items-center justify-center gap-3 border border-white/70 bg-white/10 py-4 text-base font-semibold tracking-wide text-white backdrop-blur-sm transition-all duration-300 hover:border-secondary hover:bg-white hover:text-foreground md:min-h-0 md:w-auto md:flex-initial md:py-3.5 md:px-8 md:text-sm"
+							>
+								Check today&apos;s UV
 								<ArrowRight className="size-5 transition-transform group-hover:translate-x-1 md:size-4" />
 							</Link>
 						</div>
