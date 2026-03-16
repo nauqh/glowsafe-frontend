@@ -43,3 +43,4 @@
 - Given I am logged in and I am on my profile, when I use the profile sidebar (e.g. “Weather & UV”), then I am taken to the Weather & UV view within profile (`/profile/weather`) with the same current and hourly data, so my experience is consistent.
 - Given I am on the public Weather page (`/weather`), when I view the page, then I see a way to go back (e.g. “Back” or “Home” link) so I can return to the main site or profile without using the browser back button only.
 - Given weather data is still loading, when I view the Weather & UV page, then I see a loading state (e.g. “Loading weather for [city]” or skeleton) so I know data is being fetched and the page is not broken.
+
