@@ -82,7 +82,11 @@ export function SuburbSelect({
 	}, [query, searchable]);
 
 	return (
-		<div ref={containerRef} className="relative" id={id}>
+		<div
+			ref={containerRef}
+			className="relative inline-block w-64 sm:w-72"
+			id={id}
+		>
 			<button
 				type="button"
 				onClick={handleToggle}
