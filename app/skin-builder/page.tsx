@@ -32,6 +32,8 @@ import {
 	PROFILE_STORAGE_KEY,
 	PROFILE_INSIGHT_STORAGE_KEY,
 } from "@/lib/skin-profile-data";
+import { MELBOURNE_SUBURB_GROUPS } from "@/lib/weather-types";
+import { SuburbSelect } from "@/components/weather/suburb-select";
 
 const API_BASE_URL =
 	process.env.NEXT_PUBLIC_BACKEND_URL ??
@@ -62,6 +64,8 @@ export default function SkinBuilderPage() {
 	const [protectionHabits, setProtectionHabits] = useState<ProtectionHabit[]>(
 		[],
 	);
+	const [locationPickerOpen, setLocationPickerOpen] = useState(false);
+	const [locationSearch, setLocationSearch] = useState("");
 	const [completed, setCompleted] = useState(false);
 	const [insight, setInsight] = useState<QuizInsight | null>(null);
 	const [insightLoading, setInsightLoading] = useState(false);
@@ -586,45 +590,199 @@ export default function SkinBuilderPage() {
 							}}
 							className="rounded-3xl border border-border/60 bg-muted/10 px-4 py-5 sm:px-5 sm:py-6"
 						>
-							<div className="flex items-center gap-2">
-								<span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
-									2
-								</span>
-								<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
-									Which area of Victoria do you spend most
-									time in?
-								</h2>
-							</div>
-							<p className="mt-2 text-sm text-muted-foreground md:text-base">
-								We&apos;ll use this to show UV for your area.
-							</p>
-							<div className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-3 md:mt-6 lg:grid-cols-3 lg:gap-4">
-								{AUSTRALIAN_LOCATIONS.map((loc) => (
-									<button
-										key={loc.id}
-										type="button"
-										onClick={() =>
-											handleLocationSelect(loc.id)
-										}
-										className={cn(
-											"flex min-h-[56px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-all sm:min-h-0",
-											locationId === loc.id
-												? "border-accent bg-accent/10"
-												: "border-border bg-card hover:border-muted-foreground/40",
-										)}
-									>
-										<MapPin className="size-5 shrink-0 text-muted-foreground sm:size-4" />
-										<div className="min-w-0">
-											<span className="block text-sm font-medium text-foreground">
-												{loc.label}
+							{(() => {
+								const currentLabel =
+									locationId &&
+									AUSTRALIAN_LOCATIONS.find(
+										(l) => l.id === locationId,
+									)?.label;
+								return (
+									<>
+										<div className="flex items-center gap-2">
+											<span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background text-xs font-medium text-muted-foreground">
+												2
 											</span>
-											<span className="text-xs text-muted-foreground">
-												{loc.region}
-											</span>
+											<div>
+												<h2 className="text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
+													Which area of Victoria do
+													you spend most time in?
+												</h2>
+												<p className="mt-1 text-sm text-muted-foreground md:text-base">
+													We&apos;ll use this to show
+													UV for your area.
+												</p>
+											</div>
 										</div>
-									</button>
-								))}
-							</div>
+										<div className="mt-4 rounded-xl border border-border/70 bg-card/50 px-4 py-3 sm:px-5 sm:py-4">
+											<div className="flex flex-col items-center justify-center gap-2 text-center">
+												<p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+													Your suburb
+												</p>
+												<button
+													type="button"
+													onClick={() =>
+														setLocationPickerOpen(
+															true,
+														)
+													}
+													className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-1.5 text-sm font-medium text-foreground shadow-sm transition-colors hover:border-accent hover:bg-accent/5"
+												>
+													<MapPin className="size-4 text-muted-foreground" />
+													<span className="truncate max-w-[220px] sm:max-w-[260px]">
+														{currentLabel ??
+															"Choose your suburb"}
+													</span>
+												</button>
+											</div>
+										</div>
+
+										{locationPickerOpen && (
+											<div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 px-4">
+												<div className="w-full max-w-lg rounded-2xl border border-border bg-background p-5 shadow-xl">
+													<div className="flex items-start justify-between gap-4">
+														<div>
+															<p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+																Choose suburb
+															</p>
+															<h3 className="mt-1 text-base font-medium text-foreground">
+																Where are you
+																most days?
+															</h3>
+															<p className="mt-1 text-xs text-muted-foreground">
+																Start typing to
+																find your
+																Melbourne
+																suburb, then
+																we&apos;ll use
+																it for UV and
+																recommendations.
+															</p>
+														</div>
+														<button
+															type="button"
+															onClick={() =>
+																setLocationPickerOpen(
+																	false,
+																)
+															}
+															className="text-xs text-muted-foreground hover:text-foreground"
+														>
+															Close
+														</button>
+													</div>
+													<div className="mt-4 space-y-3">
+														<input
+															type="text"
+															value={
+																locationSearch
+															}
+															onChange={(e) =>
+																setLocationSearch(
+																	e.target
+																		.value,
+																)
+															}
+															placeholder="Search suburb…"
+															className="h-9 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent"
+														/>
+														<div className="max-h-64 overflow-y-auto rounded-md border border-border/60 bg-muted/40 p-2">
+															{MELBOURNE_SUBURB_GROUPS.map(
+																(group) => {
+																	const q =
+																		locationSearch
+																			.trim()
+																			.toLowerCase();
+																	const options =
+																		group.options.filter(
+																			(
+																				name,
+																			) =>
+																				!q ||
+																				name
+																					.toLowerCase()
+																					.includes(
+																						q,
+																					),
+																		);
+																	if (
+																		options.length ===
+																		0
+																	)
+																		return null;
+																	return (
+																		<div
+																			key={
+																				group.label
+																			}
+																			className="mb-3 last:mb-0"
+																		>
+																			<p className="px-1 pb-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+																				{
+																					group.label
+																				}
+																			</p>
+																			<div className="space-y-1">
+																				{options.map(
+																					(
+																						name,
+																					) => {
+																						const match =
+																							AUSTRALIAN_LOCATIONS.find(
+																								(
+																									l,
+																								) =>
+																									l.label ===
+																									name,
+																							);
+																						if (
+																							!match
+																						)
+																							return null;
+																						const selected =
+																							match.id ===
+																							locationId;
+																						return (
+																							<button
+																								key={
+																									match.id
+																								}
+																								type="button"
+																								onClick={() => {
+																									handleLocationSelect(
+																										match.id,
+																									);
+																									setLocationPickerOpen(
+																										false,
+																									);
+																								}}
+																								className={`flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-left text-sm ${
+																									selected
+																										? "bg-accent text-accent-foreground"
+																										: "bg-card text-foreground hover:bg-muted"
+																								}`}
+																							>
+																								<span className="truncate">
+																									{
+																										match.label
+																									}
+																								</span>
+																							</button>
+																						);
+																					},
+																				)}
+																			</div>
+																		</div>
+																	);
+																},
+															)}
+														</div>
+													</div>
+												</div>
+											</div>
+										)}
+									</>
+								);
+							})()}
 						</section>
 
 						{/* 3 — Activities */}

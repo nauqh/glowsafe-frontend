@@ -22,13 +22,13 @@
 
 ---
 
-## US 1.1: Profile builder intro and quiz entry
+## US 1.1: Profile builder intro and quiz entry (new user, not logged in)
 
 **As a** user, **I want to** see what the skin profile builder will ask and start the quiz from one place **so that** I know what to expect and can begin quickly.
 
-- Given I am on the profile build page (`/profile/build` or `/build`), when I view the page, then I see the heading “Build your sun profile” and a short description that my answers power personalised UV advice and sun-safety tips.
-- Given I am on the profile build page, when I scroll the “What you’ll set up” section, then I see four items: Skin type (Fitzpatrick), Location (Victoria), Activities & habits, and Your sun-smart plan, each with a short explanation.
-- Given I am on the profile build page, when I click “Start the quiz”, then I am taken to `/skin-builder` and the quiz starts (after the initial loading experience).
+- Given I am a new user on the home page (not logged in), when I view the page, then I see the heading “Build your sun profile” and a short description that my answers power personalised UV advice and sun-safety tips, along with a primary action that takes me to the skin profile builder intro.
+- Given I am on the profile build page (`/build` or `/profile/build`), when I scroll the “What you’ll set up” section, then I see four items — Skin type (Fitzpatrick), Location (Victoria), Activities & habits, and Your sun-smart plan — each with a short explanation.
+- Given I am on the profile build page as a new user (not logged in), when I click “Start the quiz”, then I am taken to `/skin-builder` and the quiz starts (after the initial loading experience).
 
 ---
 

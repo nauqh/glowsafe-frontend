@@ -1,6 +1,8 @@
 // Shared skin profile types and lookup data (skin-builder + profile page)
 // Skin type ids "1"-"6" map to Fitzpatrick scale for risk logic; labels are plain-language only.
 
+import { MELBOURNE_SUBURBS } from "./weather-types";
+
 export const SKIN_TYPES = [
 	{
 		id: "1",
@@ -40,59 +42,20 @@ export const SKIN_TYPES = [
 	},
 ] as const;
 
-// Victoria locations — focused on Melbourne suburbs + a regional catch-all.
-export const AUSTRALIAN_LOCATIONS = [
-	{
-		id: "melbourne-cbd",
-		label: "Melbourne CBD",
-		region: "Inner Melbourne",
-	},
-	{
-		id: "carlton-fitzroy",
-		label: "Carlton / Fitzroy",
-		region: "Inner North",
-	},
-	{
-		id: "richmond-abbotsford",
-		label: "Richmond / Abbotsford",
-		region: "Inner East",
-	},
-	{
-		id: "st-kilda-elwood",
-		label: "St Kilda / Elwood",
-		region: "Bayside",
-	},
-	{
-		id: "brunswick-coburg",
-		label: "Brunswick / Coburg",
-		region: "Inner North",
-	},
-	{
-		id: "footscray-yarraville",
-		label: "Footscray / Yarraville",
-		region: "Inner West",
-	},
-	{
-		id: "werribee-point-cook",
-		label: "Werribee / Point Cook",
-		region: "Outer South West",
-	},
-	{
-		id: "dandenong-springvale",
-		label: "Dandenong / Springvale",
-		region: "South East",
-	},
-	{
-		id: "frankston-seaford",
-		label: "Frankston / Seaford",
-		region: "Bayside / Peninsula",
-	},
-	{
-		id: "regional-victoria",
-		label: "Regional Victoria",
-		region: "Outside greater Melbourne",
-	},
-] as const;
+// Victoria locations — aligned with the Melbourne suburbs used in weather.
+function suburbToId(name: string): string {
+	return name
+		.toLowerCase()
+		.replace(/&/g, "and")
+		.replace(/[^a-z0-9]+/g, "-")
+		.replace(/^-+|-+$/g, "");
+}
+
+export const AUSTRALIAN_LOCATIONS = MELBOURNE_SUBURBS.map((suburb) => ({
+	id: suburbToId(suburb),
+	label: suburb,
+	region: "Victoria",
+}));
 
 export const OUTDOOR_ACTIVITIES = [
 	{ id: "beach-pool", label: "Beach or pool days", icon: "🏖️" },
