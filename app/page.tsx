@@ -66,12 +66,8 @@ export default function Home() {
 						<nav className="flex items-center gap-10">
 							<NavLink href="/skin-builder">Skin Builder</NavLink>
 							<NavLink href="/weather">Weather & UV</NavLink>
+							<NavLink href="/sun-news">Sun news</NavLink>
 							<NavLink href="#how-it-works">About us</NavLink>
-							<NavLink href="#why">Why GlowSafe</NavLink>
-							<NavLink href="#early-access">
-								What&apos;s new
-							</NavLink>
-							<NavLink href="#contact-us">Contact us</NavLink>
 						</nav>
 						<button
 							type="button"
