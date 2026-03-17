@@ -44,6 +44,14 @@ function getUvLabel(uvi: number): { label: string; color: string } {
 	};
 }
 
+type UvCategory = "low" | "moderate" | "high";
+
+function getUvCategory(uvi: number): UvCategory {
+	if (uvi <= 2) return "low";
+	if (uvi <= 5) return "moderate";
+	return "high";
+}
+
 function formatTime(ts: number, timezone: string): string {
 	return new Date(ts * 1000).toLocaleTimeString("en-AU", {
 		timeZone: timezone,
@@ -282,6 +290,16 @@ export function WeatherView({
 					/>
 				</div>
 			</section>
+			<section className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-sm md:p-8">
+				<h2 className="text-lg font-semibold tracking-tight">
+					What this UV means for you
+				</h2>
+				<p className="mt-1 text-sm text-muted-foreground">
+					Actions change with the UV level. Here&apos;s what to do
+					today.
+				</p>
+				<UvGuide uvi={current.uvi} />
+			</section>
 
 			<section className="mt-8 rounded-2xl border border-border bg-card p-6 shadow-sm md:p-8">
 				<h2 className="text-lg font-semibold tracking-tight">
@@ -397,3 +415,138 @@ export function WeatherView({
 		</>
 	);
 }
+
+function UvGuide({ uvi }: { uvi: number }) {
+	const category = getUvCategory(uvi);
+
+	if (category === "low") {
+		return (
+			<div className="mt-4 grid gap-4 md:grid-cols-[2fr_1fr] md:items-start">
+				<div className="space-y-2">
+					<p className="text-sm font-medium text-safe">
+						Low UV (0–2): you&apos;re mostly in the clear
+					</p>
+					<ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+						<li>
+							It&apos;s generally safe to be outside without
+							sunscreen for most skin types.
+						</li>
+						<li>
+							Still wear sunglasses to protect your eyes and
+							consider a hat if you&apos;re out for a long time.
+						</li>
+						<li>
+							Great time for incidental sun exposure if your
+							skin usually burns easily.
+						</li>
+					</ul>
+				</div>
+				<div className="rounded-xl border border-dashed border-safe/50 bg-safe/5 p-3 text-xs text-muted-foreground">
+					<p className="font-semibold text-safe">
+						Want the science?
+					</p>
+					<p className="mt-1">
+						UV below 3 is usually too low to cause sunburn for most
+						people. Guidelines from{" "}
+						<a
+							href="https://www.cancer.org.au/cancer-information/causes-and-prevention/sun-safety/uv-index"
+							target="_blank"
+							rel="noreferrer"
+							className="underline underline-offset-2"
+						>
+							Cancer Council Australia
+						</a>{" "}
+						say sun protection isn&apos;t needed unless you&apos;re
+						in snow or at altitude.
+					</p>
+				</div>
+			</div>
+		);
+	}
+
+	if (category === "moderate") {
+		return (
+			<div className="mt-4 grid gap-4 md:grid-cols-[2fr_1fr] md:items-start">
+				<div className="space-y-2">
+					<p className="text-sm font-medium text-warning">
+						Moderate UV (3–5): protect if you&apos;re out a while
+					</p>
+					<ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+						<li>
+							Apply SPF 50+ to exposed skin 20 minutes before you
+							go outside.
+						</li>
+						<li>
+							Add a hat, sunglasses and clothing that covers your
+							shoulders if you&apos;ll be out for more than
+							15–20 minutes.
+						</li>
+						<li>
+							Look for shade when you can, especially around
+							midday.
+						</li>
+					</ul>
+				</div>
+				<div className="rounded-xl border border-dashed border-warning/60 bg-warning/5 p-3 text-xs text-muted-foreground">
+					<p className="font-semibold text-warning">
+						Quick video explainer
+					</p>
+					<div className="mt-2 aspect-video overflow-hidden rounded-lg border border-border bg-muted">
+						<iframe
+							title="Understanding the UV Index"
+							src="https://www.youtube.com/embed/4LhsWbZq3K0?rel=0"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share"
+							allowFullScreen
+							className="h-full w-full"
+						/>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	// High and above
+	return (
+		<div className="mt-4 grid gap-4 md:grid-cols-[2fr_1fr] md:items-start">
+			<div className="space-y-2">
+				<p className="text-sm font-medium text-alert">
+					High UV (6+): full sun-safety kit needed
+				</p>
+				<ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+					<li>
+						Use SPF 50+ on all exposed skin and reapply every 2
+						hours, or after swimming/sweating.
+					</li>
+					<li>
+						Wear a broad-brim hat, close-fitting sunglasses and
+						long, lightweight clothing.
+					</li>
+					<li>
+						Try to move outdoor plans to early morning or late
+						afternoon; seek shade between 10am–3pm.
+					</li>
+				</ul>
+			</div>
+			<div className="rounded-xl border border-dashed border-alert/70 bg-alert/5 p-3 text-xs text-muted-foreground">
+				<p className="font-semibold text-alert">
+					Why it matters today
+				</p>
+				<p className="mt-1">
+					At UV 6+, unprotected fair skin can start to burn in under
+					15 minutes. Learn more from{" "}
+					<a
+						href="https://www.sunsmart.com.au/"
+						target="_blank"
+						rel="noreferrer"
+						className="underline underline-offset-2"
+					>
+						SunSmart Australia
+					</a>{" "}
+					and keep your protection on whenever the UV Index is 3 or
+					above.
+				</p>
+			</div>
+		</div>
+	);
+}
+
