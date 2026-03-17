@@ -421,12 +421,12 @@ function UvGuide({ uvi }: { uvi: number }) {
 
 	if (category === "low") {
 		return (
-			<div className="mt-4 grid gap-4 md:grid-cols-[2fr_1fr] md:items-start">
+			<div className="mt-4 grid gap-6 md:grid-cols-[3fr_2fr] md:items-start">
 				<div className="space-y-2">
-					<p className="text-sm font-medium text-safe">
+					<p className="text-sm font-semibold text-safe">
 						Low UV (0–2): you&apos;re mostly in the clear
 					</p>
-					<ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+					<ul className="list-disc space-y-1.5 pl-5 text-[13px] text-foreground/80">
 						<li>
 							It&apos;s generally safe to be outside without
 							sunscreen for most skin types.
@@ -436,14 +436,20 @@ function UvGuide({ uvi }: { uvi: number }) {
 							consider a hat if you&apos;re out for a long time.
 						</li>
 						<li>
-							Great time for incidental sun exposure if your
-							skin usually burns easily.
+							Perfect time for a coffee run, shady walks along
+							Southbank, or a lap around the Tan before the UV
+							climbs later in the day.
+						</li>
+						<li>
+							If your skin usually burns easily, this is the best
+							window to be outdoors without your full sun-safety
+							kit.
 						</li>
 					</ul>
 				</div>
-				<div className="rounded-xl border border-dashed border-safe/50 bg-safe/5 p-3 text-xs text-muted-foreground">
+				<div className="space-y-2 rounded-xl border border-dashed border-safe/50 bg-safe/5 p-3 text-[12px] text-foreground/80">
 					<p className="font-semibold text-safe">
-						Want the science?
+						Want the science (Melbourne edition)?
 					</p>
 					<p className="mt-1">
 						UV below 3 is usually too low to cause sunburn for most
@@ -457,8 +463,20 @@ function UvGuide({ uvi }: { uvi: number }) {
 							Cancer Council Australia
 						</a>{" "}
 						say sun protection isn&apos;t needed unless you&apos;re
-						in snow or at altitude.
+						in snow or at altitude. Around Melbourne, that means
+						it&apos;s a good time for covered spots like Queen Vic
+						Market, ACMI, or the NGV forecourt without worrying
+						about intense UV.
 					</p>
+					<div className="mt-3 aspect-video overflow-hidden rounded-lg border border-safe/40 bg-background md:mt-4">
+						<iframe
+							title="Low UV and when protection matters"
+							src="https://www.youtube.com/embed/-cd9wSM0EEk?rel=0"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share"
+							allowFullScreen
+							className="h-full w-full"
+						/>
+					</div>
 				</div>
 			</div>
 		);
@@ -466,35 +484,36 @@ function UvGuide({ uvi }: { uvi: number }) {
 
 	if (category === "moderate") {
 		return (
-			<div className="mt-4 grid gap-4 md:grid-cols-[2fr_1fr] md:items-start">
+			<div className="mt-4 grid gap-6 md:grid-cols-[3fr_2fr] md:items-start">
 				<div className="space-y-2">
-					<p className="text-sm font-medium text-warning">
-						Moderate UV (3–5): protect if you&apos;re out a while
+					<p className="text-sm font-semibold text-warning">
+						Moderate UV (3–5): time to switch protection on
 					</p>
-					<ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+					<ul className="list-disc space-y-1.5 pl-5 text-[13px] text-foreground/80">
 						<li>
 							Apply SPF 50+ to exposed skin 20 minutes before you
 							go outside.
 						</li>
 						<li>
 							Add a hat, sunglasses and clothing that covers your
-							shoulders if you&apos;ll be out for more than
-							15–20 minutes.
+							shoulders if you&apos;ll be out for more than 15–20
+							minutes.
 						</li>
 						<li>
-							Look for shade when you can, especially around
-							midday.
+							Choose shady routes and hangouts — think trees in
+							Fitzroy Gardens, under the sails at Fed Square, or
+							covered laneway cafés.
 						</li>
 					</ul>
 				</div>
-				<div className="rounded-xl border border-dashed border-warning/60 bg-warning/5 p-3 text-xs text-muted-foreground">
+				<div className="rounded-xl border border-dashed border-warning/60 bg-warning/5 p-3 text-[12px] text-foreground/80">
 					<p className="font-semibold text-warning">
 						Quick video explainer
 					</p>
-					<div className="mt-2 aspect-video overflow-hidden rounded-lg border border-border bg-muted">
+					<div className="mt-3 aspect-video overflow-hidden rounded-lg border border-border bg-muted md:mt-4">
 						<iframe
 							title="Understanding the UV Index"
-							src="https://www.youtube.com/embed/4LhsWbZq3K0?rel=0"
+							src="https://www.youtube.com/embed/-cd9wSM0EEk?rel=0"
 							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share"
 							allowFullScreen
 							className="h-full w-full"
@@ -507,12 +526,12 @@ function UvGuide({ uvi }: { uvi: number }) {
 
 	// High and above
 	return (
-		<div className="mt-4 grid gap-4 md:grid-cols-[2fr_1fr] md:items-start">
+		<div className="mt-4 grid gap-6 md:grid-cols-[3fr_2fr] md:items-start">
 			<div className="space-y-2">
-				<p className="text-sm font-medium text-alert">
+				<p className="text-sm font-semibold text-alert">
 					High UV (6+): full sun-safety kit needed
 				</p>
-				<ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+				<ul className="list-disc space-y-1.5 pl-5 text-[13px] text-foreground/80">
 					<li>
 						Use SPF 50+ on all exposed skin and reapply every 2
 						hours, or after swimming/sweating.
@@ -523,14 +542,15 @@ function UvGuide({ uvi }: { uvi: number }) {
 					</li>
 					<li>
 						Try to move outdoor plans to early morning or late
-						afternoon; seek shade between 10am–3pm.
+						afternoon; seek shade between 10am–3pm. Aim for spots
+						like the NGV courtyard, colonnades along Collins St, or
+						shade structures at Southbank instead of open parks at
+						midday.
 					</li>
 				</ul>
 			</div>
-			<div className="rounded-xl border border-dashed border-alert/70 bg-alert/5 p-3 text-xs text-muted-foreground">
-				<p className="font-semibold text-alert">
-					Why it matters today
-				</p>
+			<div className="space-y-2 rounded-xl border border-dashed border-alert/70 bg-alert/5 p-3 text-[12px] text-foreground/80">
+				<p className="font-semibold text-alert">Why it matters today</p>
 				<p className="mt-1">
 					At UV 6+, unprotected fair skin can start to burn in under
 					15 minutes. Learn more from{" "}
@@ -545,8 +565,16 @@ function UvGuide({ uvi }: { uvi: number }) {
 					and keep your protection on whenever the UV Index is 3 or
 					above.
 				</p>
+				<div className="mt-3 aspect-video overflow-hidden rounded-lg border border-border bg-muted md:mt-4">
+					<iframe
+						title="High UV protection tips"
+						src="https://www.youtube.com/embed/-cd9wSM0EEk?rel=0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share"
+						allowFullScreen
+						className="h-full w-full"
+					/>
+				</div>
 			</div>
 		</div>
 	);
 }
-
